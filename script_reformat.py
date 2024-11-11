@@ -26,10 +26,10 @@ def convert2pandas(data: t.List[str]) -> pd.DataFrame:
     return pd.DataFrame(df)
 
 
-path_old_train = "datasets/hdfs_train"
-path_old_test_normal = "datasets/hdfs_test_normal"
-path_old_test_abnormal = "datasets/hdfs_test_abnormal"
-path_new_dir = "datasets/HDFS"
+path_old_train = "datasets/bgl_train"
+path_old_test_normal = "datasets/bgl_test_normal"
+path_old_test_abnormal = "datasets/bgl_test_abnormal"
+path_new_dir = "datasets/BGL"
 
 
 if __name__ == "__main__":
