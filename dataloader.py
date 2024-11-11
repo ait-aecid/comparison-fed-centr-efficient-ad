@@ -1,7 +1,7 @@
 import typing as t
 
-import data_op._read_csv as data_ops
-from aux import Color
+import op._data_op as data_ops
+from op.aux import Color
 
 
 class DataWrapper:
@@ -63,7 +63,7 @@ def load_data(config: t.Dict[str, t.Any], num_client: int) -> DataWrapper:
     )[num_client]
 
     return DataWrapper(
-        train=train,
-        test_normal=split_data["test_normal"],
-        test_abnormal=split_data["test_abnormal"]
+        train=train["Event_seq"].to_list(),
+        test_normal=split_data["test_normal"]["Event_seq"].to_list(),
+        test_abnormal=split_data["test_abnormal"]["Event_seq"].to_list()
     )

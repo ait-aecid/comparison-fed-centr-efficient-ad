@@ -13,5 +13,6 @@ for i in range(args["amount_clients"]):
     print(f"Client {i}")
     print(data := load_data(config=args, num_client=i))
 
-    print(data.train.head(5))
+    #print(data.train[:3])
+    break
 

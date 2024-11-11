@@ -4,7 +4,7 @@ This script is only to reformat the datasets from:
 
 Delete after no longer need it
 """
-from aux import Color
+from op.aux import Color
 import pandas as pd
 
 import typing as t
