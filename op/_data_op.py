@@ -42,10 +42,12 @@ def read_files(args: Arguments) -> t.Dict[str, pd.DataFrame]:
 
 
 def split_train_test(
-    args: Arguments, normal: pd.DataFrame
+    args: Arguments, normal: pd.DataFrame, num_run: int = 0
 ) -> t.Dict[str, pd.DataFrame]:  
     per = args.train_per
-    idx = Random.shufle_idx(args.seed_number, range(len(normal)))
+    idx = Random.shufle_idx(
+        args.seed_number + num_run, range(len(normal))
+    )
 
     return {
         "train": normal.iloc[idx[:int(len(normal) * per)]], 

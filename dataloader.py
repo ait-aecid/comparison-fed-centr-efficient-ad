@@ -33,12 +33,14 @@ class DataWrapper:
         return self.__repr__()
 
 
-def load_data(config: t.Dict[str, t.Any], num_client: int) -> DataWrapper:
+def load_data(
+    config: t.Dict[str, t.Any], num_client: int, num_run: int = 0,
+) -> DataWrapper:
     """
     Load data for each client.
         * **config**: experiment configuration.
         * **num_client**: train number in the client.
-
+        * **num_run**: run done in the client. 
     Code example:
     ``` 
     data = load_data(config, num_client=2)
@@ -54,7 +56,9 @@ def load_data(config: t.Dict[str, t.Any], num_client: int) -> DataWrapper:
     data = data_ops.read_files(args=args)
 
     print(Color.blue("2) Split Train - Test"))
-    split_data = data_ops.split_train_test(args=args, normal=data["Normal"])
+    split_data = data_ops.split_train_test(
+        args=args, normal=data["Normal"], num_run=num_run
+    )
     split_data["test_abnormal"] = data["Abnormal"]
 
     print(Color.blue("3) Split client-wise"))

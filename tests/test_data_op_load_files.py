@@ -41,10 +41,10 @@ class ReadFilesTestCase(unittest.TestCase):
 
     def test_split_train_test(self) -> None:
         result = read_.split_train_test(
-            args=args, normal=data["Normal"]
+            args=args, normal=data["Normal"], num_run=0
         )
         result2 = read_.split_train_test(
-            args=args, normal=data["Normal"]
+            args=args, normal=data["Normal"], num_run=0
         )
 
         self.assertAlmostEqual(
@@ -55,6 +55,17 @@ class ReadFilesTestCase(unittest.TestCase):
         )
         self.assertTrue(result["train"].equals(result2["train"]))
         self.assertTrue(result["test_normal"].equals(result2["test_normal"]))
+
+    def test_split_train_test_different_runs(self) -> None:
+        result = read_.split_train_test(
+            args=args, normal=data["Normal"], num_run=1
+        )
+        result2 = read_.split_train_test(
+            args=args, normal=data["Normal"], num_run=2
+        )
+
+        self.assertFalse(result["train"].equals(result2["train"]))
+        self.assertFalse(result["test_normal"].equals(result2["test_normal"]))
 
     def test_split_clients(self) -> None:
         splits = read_.split_in_clients(
