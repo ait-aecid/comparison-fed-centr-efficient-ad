@@ -6,7 +6,6 @@ import unittest
 
 args = read_.Arguments.from_config({
     "dataset_path": "datasets/BGL",
-    "number_client": 2, 
     "amount_clients": 10,
     "seed_number": 7,
     "train_per": 0.1,

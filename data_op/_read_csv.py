@@ -61,7 +61,10 @@ def split_in_clients(
 
     n = int(len(idx) / args.amount_clients)
     for i in range(args.amount_clients):
-        splits.append(normal.iloc[idx[i * n: (i + 1) * n]])
+        if i < args.amount_clients - 1:
+            splits.append(normal.iloc[idx[i * n: (i + 1) * n]])
+        else:
+            splits.append(normal.iloc[idx[i * n:]])
 
     return splits 
 
