@@ -1,5 +1,7 @@
 import typing as t
 
+from data_op._read_csv import Arguments
+
 
 class DataWrapper:
     """
@@ -18,15 +20,6 @@ class DataWrapper:
         self.train = train
         self.test_normal = test_normal
         self.test_abnormal = test_abnormal
-
-
-class Arguments:
-    @classmethod
-    def from_config(cls, config: t.Dict[str, t.Any]) -> t.Self:
-        inst = cls()
-        for k, v in config.items:
-            setattr(inst, k, v)
-        return inst
 
 
 def load_data(config: t.Dict[str, t.Any], run_num: int) -> DataWrapper:
