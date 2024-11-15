@@ -1,11 +1,13 @@
 from models.known_events import KnownEvents
-from metrics import apply_metrics
 from dataloader import load_data
 from op.aux import Color
 
+from flwr.common import NDArrays
 import flwr as fl
 
 import typing as t
+import argparse
+import yaml
 
 
 class FlowerClient(fl.client.NumPyClient):
@@ -20,42 +22,41 @@ class FlowerClient(fl.client.NumPyClient):
         self.n = len(self.data.test_abnormal) + len(self.data.test_normal)
 
     def fit(self, parameters, config) -> None:
+
+        print(parameters)
+
         print(Color.blue("Starting Local Training"))
-        self.model.set_weights(parameters)
+        self.model.set_weights(set(parameters))
         results = self.model.fit(self.data.train)
+        weights = NDArrays([list(self.model.get_weights())])
         print(Color.blue("Local Training Complete"))
-        return self.model.get_weights(), len(self.data.train), results
 
-    def evaluate(self, parameters, config):
-        print(Color.blue("Starting Evaluation"))
-        self.model.set_weights(parameters)
-
-        results = apply_metrics(
-            pred_normal=self.model.predict(self.data.test_normal),
-            pred_abnormal=self.model.predict(self.data.test_abnormal)
-        )
-        print(Color.blue("Evaluation Complete"))
-
-        return 0, self.n, results.as_dict()
+        return weights, len(self.data.train), {"Loss": results}
 
 
-args = {
-    "dataset_path": "datasets/BGL",
-    "amount_clients": 3,
-    "seed_number": 2,
-    "train_per": 0.1,
-}
-num_run = 0
-num_client = 0
-ip = "127.0.0.1:8080"
+
+parser = argparse.ArgumentParser(description="Server script")
+parser.add_argument("--config", required=True)
+parser.add_argument("--num_client", required=True, type=int)
+
 
 if __name__ == "__main__":
+    args = parser.parse_args()
+    with open(args.config, "r") as f:
+        config = yaml.safe_load(f)
+
+    num_run = 0
+    num_client = args.num_client
+    ip = f"{config['General']["client_ip"]}:{config['General']['port']}"
+
     print(Color.purple("Starting server:"), ip)
     fl.client.start_client(
         server_address=ip,
         client=FlowerClient(
-            config=args, num_run=num_run, num_client=num_client
-        )
+            config=config["Dataset"], 
+            num_run=num_run, 
+            num_client=num_client
+        ).to_client()
     )
 
 

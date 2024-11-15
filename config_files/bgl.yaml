@@ -1,0 +1,11 @@
+General:
+    client_ip: "127.0.0.1"
+    server_ip: "0.0.0.0"
+    port: 8080
+    number_rounds: 1
+
+Dataset:
+    dataset_path: datasets/BGL
+    amount_clients: 3
+    seed_number: 2
+    train_per: 0.01
