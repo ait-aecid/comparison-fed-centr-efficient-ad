@@ -1,3 +1,4 @@
+
 import typing as t
 
 
@@ -8,8 +9,11 @@ class KnownEvents:
     def __contains__(self, x: t.Any) -> bool:
         return x in self.events
 
-    def __add__(self, x: t.Any) -> t.Self:
-        self.events.add(x)
+    def __add__(self, x: t.Union[t.Any, t.Set[t.Any]]) -> t.Self:
+        if isinstance(x, set):
+            self.set_weights(self.events.union(x))
+        else:
+            self.events.add(x)
         return self
 
     def __len__(self) -> int:
@@ -36,4 +40,13 @@ class KnownEvents:
                     results[-1] = 1
                     break 
         return results
+
+
+def update_strategy(
+    server_model: KnownEvents, clients_weights: t.List[t.Set[t.Any]]
+) -> t.Set[t.Any]:
+    for client_weights in clients_weights:
+        server_model += client_weights
+    return server_model.get_weights()
+
 

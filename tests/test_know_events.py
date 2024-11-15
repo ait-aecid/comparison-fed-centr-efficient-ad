@@ -30,3 +30,10 @@ class KnowEventsTestCase(unittest.TestCase):
         self.assertListEqual(self.knownEvents.predict(sequences), [0, 0])
         self.assertSetEqual(self.knownEvents.get_weights(), set(["a", "b", "c", "D"]))
 
+    def test_update_strategy(self) -> None:
+        weights = [set(["a", "b", "c"]), set(["d", "a","c"])]
+        
+        self.assertSetEqual(
+            ke.update_strategy(self.knownEvents, clients_weights=weights),
+            set(["a", "b", "c", "d"])
+        )
