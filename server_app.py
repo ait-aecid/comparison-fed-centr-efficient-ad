@@ -15,6 +15,7 @@ import yaml
 
 class CustomStrategy(fl.server.strategy.Strategy):
     def __init__(self, config) -> None:
+        self.num_clients = int(config["amount_clients"])
         self.data = load_data(config=config, num_client=0, num_run=0)
         print(self.data)
 
@@ -27,7 +28,7 @@ class CustomStrategy(fl.server.strategy.Strategy):
 
     def configure_fit(self, server_round, parameters, client_manager):
         instructions = []
-        for client in client_manager.sample(num_clients=2):
+        for client in client_manager.sample(num_clients=self.num_clients):
             instructions.append((client, fl.common.FitIns(parameters, {})))
 
         return instructions
@@ -42,7 +43,7 @@ class CustomStrategy(fl.server.strategy.Strategy):
                 fl.common.parameters_to_ndarrays(result.parameters)[0].tolist())
             )
  
-        updated_weights =  Parameters(
+        updated_weights = Parameters(
             tensors=list(ke.update_strategy(self.model, clients_weights=weights)),
             tensor_type="Custom"
         )
