@@ -14,7 +14,7 @@ class KnowEventsTestCase(unittest.TestCase):
     def test_get_weights(self) -> None:
         self.knownEvents.set_weights(set(["a", "V"]))
         self.assertSetEqual(
-            self.knownEvents.get_weights(), set(["a", "V"])
+            set(self.knownEvents.get_weights()), set(["a", "V"])
         )
 
     def test_predict(self) -> None:
@@ -28,12 +28,14 @@ class KnowEventsTestCase(unittest.TestCase):
         sequences = [["a", "b", "a", "c"], ["a", "D"]]
         self.assertEqual(self.knownEvents.fit(sequences), 4)
         self.assertListEqual(self.knownEvents.predict(sequences), [0, 0])
-        self.assertSetEqual(self.knownEvents.get_weights(), set(["a", "b", "c", "D"]))
+        self.assertSetEqual(
+            set(self.knownEvents.get_weights()), set(["a", "b", "c", "D"])
+        )
 
     def test_update_strategy(self) -> None:
-        weights = [set(["a", "b", "c"]), set(["d", "a","c"])]
+        weights = [["a", "b", "c"], ["d", "a","c"]]
         
         self.assertSetEqual(
-            ke.update_strategy(self.knownEvents, clients_weights=weights),
+            set(ke.update_strategy(self.knownEvents, clients_weights=weights)),
             set(["a", "b", "c", "d"])
         )

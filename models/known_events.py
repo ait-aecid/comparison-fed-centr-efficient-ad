@@ -21,11 +21,11 @@ class KnownEvents(Model):
     def __len__(self) -> int:
         return len(self.events)
 
-    def set_weights(self, events: t.Set[t.Any])-> None:
-        self.events = events
+    def set_weights(self, events: t.List[t.Any])-> None:
+        self.events = set(events)
 
-    def get_weights(self) -> t.Set[t.Any]:
-        return self.events
+    def get_weights(self) -> t.List[t.Any]:
+        return list(self.events)
 
     def fit(self, X: t.List[t.List[t.Any]]) -> int:
         for xi in X:
@@ -45,10 +45,10 @@ class KnownEvents(Model):
 
 
 def update_strategy(
-    server_model: KnownEvents, clients_weights: t.List[t.Set[t.Any]]
+    server_model: KnownEvents, clients_weights: t.List[t.List[t.Any]]
 ) -> t.Set[t.Any]:
     for client_weights in clients_weights:
-        server_model += client_weights
+        server_model += set(client_weights)
     return server_model.get_weights()
 
 

@@ -22,13 +22,10 @@ class FlowerClient(fl.client.NumPyClient):
         self.n = len(self.data.test_abnormal) + len(self.data.test_normal)
 
     def fit(self, parameters, config) -> None:
-
-        print(parameters)
-
         print(Color.blue("Starting Local Training"))
-        self.model.set_weights(set(parameters))
+        self.model.set_weights(parameters)
         results = self.model.fit(self.data.train)
-        weights = NDArrays([list(self.model.get_weights())])
+        weights = NDArrays([self.model.get_weights()])
         print(Color.blue("Local Training Complete"))
 
         return weights, len(self.data.train), {"Loss": results}
