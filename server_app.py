@@ -9,6 +9,7 @@ from metrics import apply_metrics
 from dataloader import load_data
 from op.aux import Color
 
+import typing as t
 import argparse
 import yaml
 
@@ -21,11 +22,8 @@ class CustomStrategy(fl.server.strategy.Strategy):
 
     def initialize_parameters(self, client_manager):
         self.model = ke.KnownEvents()
-        return Parameters(
-            tensors=list(self.model.get_weights()),
-            tensor_type="Custom"
-        )
-
+        return fl.common.ndarrays_to_parameters([self.model.get_weights()])
+     
     def configure_fit(self, server_round, parameters, client_manager):
         instructions = []
         for client in client_manager.sample(num_clients=self.num_clients):
@@ -39,13 +37,12 @@ class CustomStrategy(fl.server.strategy.Strategy):
 
         weights = []
         for _, result in results:
-            weights.append(set(
-                fl.common.parameters_to_ndarrays(result.parameters)[0].tolist())
+            weights.append(
+                fl.common.parameters_to_ndarrays(result.parameters)[0].tolist()
             )
- 
-        updated_weights = Parameters(
-            tensors=list(ke.update_strategy(self.model, clients_weights=weights)),
-            tensor_type="Custom"
+
+        updated_weights = fl.common.ndarrays_to_parameters(
+            [ke.update_strategy(self.model, clients_weights=weights)]
         )
     
         return updated_weights, {}
@@ -55,7 +52,8 @@ class CustomStrategy(fl.server.strategy.Strategy):
     def configure_evaluate(self, server_round, parameters, client_manager): pass 
     
     def evaluate(self, server_round, parameters):
-        self.model.set_weights(set(parameters.tensors))
+        weights = fl.common.parameters_to_ndarrays(parameters)[0].tolist()
+        self.model.set_weights(set(weights))
 
         print(Color.blue(f"Evaluation round {server_round}:"))
         print(Color.yellow(

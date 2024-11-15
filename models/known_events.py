@@ -46,7 +46,7 @@ class KnownEvents(Model):
 
 def update_strategy(
     server_model: KnownEvents, clients_weights: t.List[t.List[t.Any]]
-) -> t.Set[t.Any]:
+) -> t.List[t.Any]:
     for client_weights in clients_weights:
         server_model += set(client_weights)
     return server_model.get_weights()
