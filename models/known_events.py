@@ -1,8 +1,10 @@
 
+from models._imodel import Model
+
 import typing as t
 
 
-class KnownEvents:
+class KnownEvents(Model):
     def __init__(self) -> None:
         self.events = set()
 
