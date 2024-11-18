@@ -1,9 +1,10 @@
 
-
-from flwr.common import Parameters
 import flwr as fl
 
-from models import known_events as ke
+
+from models._imodel import Model
+from models import  _list
+
 
 from metrics import apply_metrics
 from dataloader import load_data
@@ -15,13 +16,19 @@ import yaml
 
 
 class CustomStrategy(fl.server.strategy.Strategy):
-    def __init__(self, config) -> None:
+    def __init__(
+        self, 
+        config: t.Dict[str, t.Any], 
+        model: Model,
+        update_strategy: t.Callable[[Model, t.List[t.List[t.Any]]], t.List[t.Any]]
+    ) -> None:
         self.num_clients = int(config["amount_clients"])
         self.data = load_data(config=config, num_client=0, num_run=0)
+        self.model_class, self.update_strategy = model, update_strategy
         print(self.data)
 
     def initialize_parameters(self, client_manager):
-        self.model = ke.KnownEvents()
+        self.model = self.model_class()
         return fl.common.ndarrays_to_parameters([self.model.get_weights()])
      
     def configure_fit(self, server_round, parameters, client_manager):
@@ -42,7 +49,7 @@ class CustomStrategy(fl.server.strategy.Strategy):
             )
 
         updated_weights = fl.common.ndarrays_to_parameters(
-            [ke.update_strategy(self.model, clients_weights=weights)]
+            [self.update_strategy(self.model, clients_weights=weights)]
         )
     
         return updated_weights, {}
@@ -66,7 +73,10 @@ class CustomStrategy(fl.server.strategy.Strategy):
 
 
 parser = argparse.ArgumentParser(description="Server script")
-parser.add_argument("--config", required=True)
+parser.add_argument("--config", required=True, help="Configuration file")
+parser.add_argument(
+    "--method", help=f"Select one of this {list(_list.keys())}", required=True
+)
 
 
 if __name__ == "__main__":
@@ -80,8 +90,12 @@ if __name__ == "__main__":
     fl.server.start_server(
         server_address=ip,
         config=fl.server.ServerConfig(
-            num_rounds=config["General"]["number_rounds"]
+            num_rounds=config["General"]["number_rounds"],
         ),
-        strategy=CustomStrategy(config=config["Dataset"])
+        strategy=CustomStrategy(
+            config=config["Dataset"],
+            model=_list[args.method]["Method"],
+            update_strategy=_list[args.method]["Update"]
+        )
     )
 
