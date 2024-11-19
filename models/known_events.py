@@ -1,3 +1,17 @@
+"""
+Know event methods from: https://dl.acm.org/doi/pdf/10.1145/3660768
+
+Pseudo code:
+------------
+is_abnormal = False
+for event in sequence:
+    if event is not Know:
+        is_abnormal = True
+
+Federated approach: 
+-------------------
+The sets of the diferent clients are combine in a set union operation
+"""
 
 from models._imodel import Model
 
