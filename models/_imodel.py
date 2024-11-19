@@ -1,4 +1,6 @@
-
+"""
+Main class to be use for all the methods/models in the repository
+"""
 from abc import ABC, abstractmethod
 
 import typing as t
