@@ -20,10 +20,11 @@ class CustomStrategy(fl.server.strategy.Strategy):
         self, 
         config: t.Dict[str, t.Any], 
         model: Model,
+        num_run: int,
         update_strategy: t.Callable[[Model, t.List[t.List[t.Any]]], t.List[t.Any]]
     ) -> None:
         self.num_clients = int(config["amount_clients"])
-        self.data = load_data(config=config, num_client=0, num_run=0)
+        self.data = load_data(config=config, num_client=0, num_run=num_run)
         self.model_class, self.update_strategy = model, update_strategy
         print(self.data)
 
@@ -77,6 +78,7 @@ parser.add_argument("--config", required=True, help="Configuration file")
 parser.add_argument(
     "--method", help=f"Select one of this {list(_list.keys())}", required=True
 )
+parser.add_argument("--run_number", default=0, help="Run number (Default: 0)", type=int)
 
 
 if __name__ == "__main__":
@@ -95,6 +97,7 @@ if __name__ == "__main__":
         strategy=CustomStrategy(
             config=config["Dataset"],
             model=_list[args.method]["Method"],
+            num_run=args.run_number,
             update_strategy=_list[args.method]["Update"]
         )
     )

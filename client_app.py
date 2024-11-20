@@ -44,13 +44,14 @@ parser.add_argument("--num_client", required=True, type=int)
 parser.add_argument(
     "--method", help=f"Select one of this {list(_list.keys())}", required=True
 )
+parser.add_argument("--run_number", default=0, help="Run number (Default: 0)", type=int)
+
 
 if __name__ == "__main__":
     args = parser.parse_args()
     with open(args.config, "r") as f:
         config = yaml.safe_load(f)
 
-    num_run = 0
     num_client = args.num_client
     ip = f"{config['General']["client_ip"]}:{config['General']['port']}"
 
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         server_address=ip,
         client=FlowerClient(
             config=config["Dataset"], 
-            num_run=num_run, 
+            num_run=args.run_number, 
             num_client=num_client,
             model=_list[args.method]["Method"]
         ).to_client()
