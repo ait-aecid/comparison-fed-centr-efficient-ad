@@ -6,9 +6,20 @@ from op._metrics import (
 )
 
 
+class TimeResults:
+    """
+    Return the different time stats
+    """
+    def __init__(self, time: t.Dict[str, float] | None) -> None:
+        self.time = time
+
+    def as_dict(self) -> t.Dict[str, float]:
+        return {"NaN": "(No stats found)"} if self.time is None else self.time
+
+
 class Results:
     """
-    Return the results of a binary classification.
+    Return the results of a binary classification. 
 
     Metrics use:
     * Precision
@@ -16,24 +27,29 @@ class Results:
     * F1
     """
     def __init__(self, tp: int, tn: int, fp: int, fn: int) -> None:
-        self.tp = tp
-        self.tn = tn
-        self.fp = fp
-        self.fn = fn
+        self.tp, self.fn, self.tn, self.fp = tp, fn, tn, fp
 
+        self.time_stats = self.add_time(None)
         self.precision = Metrics.precision(tp=tp, fp=fp)
         self.recall = Metrics.recall(tp=tp, fn=fn)
         self.f1 = Metrics.f1(tp=tp, fn=fn, fp=fp)
 
-    def as_dict(self) -> dict:
+    def add_time(self, time: t.Dict[str, float] | None) -> None:
+        self.time_stats = TimeResults(time=time)
+
+    def as_dict(self) -> t.Dict[str, t.Dict[str, t.Any]]:
         return {
-            "tp": self.tp,
-            "tn": self.tn,
-            "fp": self.fp,
-            "fn": self.fn,
-            "precision": self.precision,
-            "recall": self.recall,
-            "f1": self.f1
+            "Metrics": 
+                {
+                    "tp": self.tp,
+                    "tn": self.tn,
+                    "fp": self.fp,
+                    "fn": self.fn,
+                    "precision": self.precision,
+                    "recall": self.recall,
+                    "f1": self.f1
+                },
+            "Times": self.time_stats.as_dict()
         }
 
     def __repr__(self) -> str:
@@ -44,7 +60,9 @@ class Results:
 
 
 def apply_metrics(
-    pred_normal: t.List[int], pred_abnormal: t.List[int]
+    pred_normal: t.List[int], 
+    pred_abnormal: t.List[int], 
+    times: t.Dict[str, float] | None = None
 ) -> Results:
     """
     Apply metrics to the test data.
@@ -54,14 +72,17 @@ def apply_metrics(
     # results.f1
     # results.recall
     # results.precision
+    # results.time_stats
     ```
     """
     normal = calculate_false_true_pred(pred_normal, expected_value=0)
     abnormal = calculate_false_true_pred(pred_abnormal, expected_value=1)
 
-    return Results(
+    results = Results(
         tp=abnormal["True"],
         tn=normal["True"],
         fp=normal["False"],
         fn=abnormal["False"],
     )
+    results.add_time(time=times)
+    return results

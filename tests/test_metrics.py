@@ -50,8 +50,8 @@ class MetricsTestCase(unittest.TestCase):
             pred_normal=[0, 0, 0], pred_abnormal=[1, 1, 1]
         )
 
-        self.assertDictEqual(
-            {
+        self.assertDictEqual({
+            "Metrics": {
                 "f1": 1.,
                 "recall": 1.,
                 "precision": 1.,
@@ -59,6 +59,28 @@ class MetricsTestCase(unittest.TestCase):
                 "tn": 3,
                 "fn": 0,
                 "fp": 0,
+            }, "Times": {"NaN": "(No stats found)"}
+            },
+            result.as_dict()
+        )
+
+    def test_results_dict_with_time(self) -> None:
+        result = apply_metrics(
+            pred_normal=[0, 0, 0], 
+            pred_abnormal=[1, 1, 1],
+            times={"a": 2, "b": 1}
+        )
+
+        self.assertDictEqual({
+            "Metrics": {
+                "f1": 1.,
+                "recall": 1.,
+                "precision": 1.,
+                "tp": 3,
+                "tn": 3,
+                "fn": 0,
+                "fp": 0,
+            }, "Times": {"a": 2, "b": 1}
             },
             result.as_dict()
         )

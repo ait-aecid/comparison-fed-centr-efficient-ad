@@ -1,4 +1,7 @@
+from tabulate import tabulate
+
 import typing as t
+
 
 class Metrics:
     @staticmethod
@@ -18,9 +21,14 @@ class Metrics:
         return 2 * tp / Metrics.__not_zero(2 * tp + fp + fn)
 
 
-def present_results(results: dict) -> str:
-    names = ["tp", "tn", "fp", "fn", "precision", "recall", "f1"]
-    return "".join([f"||{name}: {results[name]:.2f}" for name in names]) + "||"
+def present_results(results: t.Dict[str, t.Dict[str, float]]) -> str:
+    msg = ""
+    for key, sub_dict in results.items():
+        msg += f"{key}\n"
+        msg += f"{tabulate(
+            sub_dict.items(), ["Metrics", "Value"], tablefmt="rounded_grid"
+        )}\n\n" 
+    return msg
 
 
 def calculate_false_true_pred(
