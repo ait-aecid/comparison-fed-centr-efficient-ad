@@ -25,6 +25,7 @@ class Results:
     * Precision
     * Recall
     * F1
+    * Balance Accuracy
     """
     def __init__(self, tp: int, tn: int, fp: int, fn: int) -> None:
         self.tp, self.fn, self.tn, self.fp = tp, fn, tn, fp
@@ -33,6 +34,7 @@ class Results:
         self.precision = Metrics.precision(tp=tp, fp=fp)
         self.recall = Metrics.recall(tp=tp, fn=fn)
         self.f1 = Metrics.f1(tp=tp, fn=fn, fp=fp)
+        self.balance_accuracy = Metrics.balance_accuracy(tp=tp, fn=fn, tn=tn, fp=fp)
 
     def add_time(self, time: t.Dict[str, float] | None) -> None:
         self.time_stats = TimeResults(time=time)
@@ -46,6 +48,7 @@ class Results:
                     "fp": self.fp,
                     "fn": self.fn,
                     "precision": self.precision,
+                    "balance accuracy": self.balance_accuracy,
                     "recall": self.recall,
                     "f1": self.f1
                 },

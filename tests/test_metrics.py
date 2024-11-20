@@ -27,6 +27,7 @@ class MetricsTestCase(unittest.TestCase):
         self.assertEqual(result.f1, 1.)
         self.assertEqual(result.recall, 1.)
         self.assertEqual(result.precision, 1.)
+        self.assertEqual(result.balance_accuracy, 1.)
         self.assertEqual(result.tp, 3)
         self.assertEqual(result.tn, 3)
         self.assertEqual(result.fn, 0)
@@ -40,6 +41,7 @@ class MetricsTestCase(unittest.TestCase):
         self.assertAlmostEqual(result.f1, 0.66, delta=0.01)
         self.assertEqual(result.recall, 1.)
         self.assertEqual(result.precision, 0.5)
+        self.assertEqual(result.balance_accuracy, 0.5)
         self.assertEqual(result.tp, 3)
         self.assertEqual(result.tn, 0)
         self.assertEqual(result.fn, 0)
@@ -55,6 +57,7 @@ class MetricsTestCase(unittest.TestCase):
                 "f1": 1.,
                 "recall": 1.,
                 "precision": 1.,
+                "balance accuracy": 1.,
                 "tp": 3,
                 "tn": 3,
                 "fn": 0,
@@ -76,6 +79,7 @@ class MetricsTestCase(unittest.TestCase):
                 "f1": 1.,
                 "recall": 1.,
                 "precision": 1.,
+                "balance accuracy": 1.,
                 "tp": 3,
                 "tn": 3,
                 "fn": 0,

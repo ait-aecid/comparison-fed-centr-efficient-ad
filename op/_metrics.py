@@ -20,6 +20,10 @@ class Metrics:
     def f1(tp: int, fn: int, fp: int) -> float:
         return 2 * tp / Metrics.__not_zero(2 * tp + fp + fn)
 
+    @staticmethod
+    def balance_accuracy(tp: int, fn: int, tn: int, fp: int) -> float:
+        return 0.5 * (tp / (tp + fn) + tn / (tn + fp))
+
 
 def present_results(results: t.Dict[str, t.Dict[str, float]]) -> str:
     msg = ""
