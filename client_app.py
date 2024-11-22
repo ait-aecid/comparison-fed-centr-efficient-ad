@@ -9,6 +9,7 @@ import flwr as fl
 
 import typing as t
 import argparse
+import time
 import yaml
 
 
@@ -29,12 +30,15 @@ class FlowerClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config) -> None:
         print(Color.blue("Starting Local Training"))
+        start = time.time()
         self.model.set_weights(parameters[0].tolist())
         results = self.model.fit(self.data.train)
         weights = NDArrays([self.model.get_weights()])
+        end = time.time() - start
         print(Color.blue("Local Training Complete"))
-
-        return weights, len(self.data.train), {"Loss": results}
+        
+        metrics = {"Loss": results, f"Time client {num_client}": end}
+        return weights, len(self.data.train), metrics 
 
 
 
