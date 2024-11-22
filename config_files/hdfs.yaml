@@ -7,7 +7,7 @@ General:
 
 Dataset:
     dataset_path: datasets/HDFS
-    amount_clients: 3
+    amount_clients: 1
     seed_number: 10
     train_per: 0.01
 
