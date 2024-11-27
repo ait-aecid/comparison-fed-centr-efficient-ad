@@ -22,7 +22,7 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def fit(X: t.List[t.List[t.Any]]) -> float: 
+    def fit(self, X: t.List[t.List[t.Any]]) -> float: 
         """
         Method to train the model
         """
