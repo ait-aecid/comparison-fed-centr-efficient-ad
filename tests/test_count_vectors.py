@@ -34,6 +34,13 @@ class TensorOperationTestCase(unittest.TestCase):
             [[1., 1., 1., 0., 0.] for _ in range(4)], new_x2.detach().tolist()
         )
 
+    def test_max_element_wise(self) -> None:
+        X1 = torch.Tensor([[1, 2, 3, 4], [5, 6, 7, 8]])
+        x2 = torch.Tensor([1, -1, 5, 10])
+        new_x = vc.max_elemnt_wise(X1=X1, x2=x2).detach().tolist()
+
+        self.assertListEqual(new_x, [[1, 2, 5, 10], [5, 6, 7, 10]])
+
 
 class CountVectorTestCase(unittest.TestCase):
     def test_get_weights(self) -> None:
@@ -66,11 +73,14 @@ class CountVectorTestCase(unittest.TestCase):
 
     def test_predict(self) -> None:
         x = [[1, 4, 2, 1, 2], [0, 0, 0, 3], [0, 0, 0, 3], [4, 0], [0, 4]]
-        x_test = [[0, 3, 0, 0], [4, 5, 5, 5, 5, 7]]
+        x_test = [[0, 0, 3, 0], [4, 5, 5, 5, 5, 7, 8], [0, 4]]
         count_vector = vc.CountVector()
         count_vector.fit(x)
 
         pred = count_vector.predict(x_test)
+        self.assertEqual(len(pred), 3)
+        for p, r in zip(pred, [0, 0.2927, 0]):
+            self.assertAlmostEqual(p, r, delta=1e-3)
 
         
 

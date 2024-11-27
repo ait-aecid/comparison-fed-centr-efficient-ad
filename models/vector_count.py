@@ -27,6 +27,15 @@ def convert_same_shape(
     return x1, x2
 
 
+def max_elemnt_wise(X1: torch.Tensor, x2: torch.Tensor) -> torch.Tensor:
+    X2 = torch.broadcast_to(x2, X1.shape)
+
+    new_x = torch.cat((X1.reshape((1, -1)), X2.reshape((1, -1))), dim=0).T
+    new_x, _ = torch.max(new_x, dim=1)
+
+    return new_x.reshape(X1.shape)
+
+
 def get_max_elem(X: List[List[int]]) -> int:
     max_ = 0
     for xi in X:
@@ -41,7 +50,7 @@ class CountVector(Model):
 
     def __get_vectors(self, X: List[List[Any]]) -> Tuple[torch.Tensor, int]:
         n_elemts = get_max_elem(X) + 1
-        vectors = torch.unique(generate_vector(X, n_elemts=n_elemts), dim=0)
+        vectors = generate_vector(X, n_elemts=n_elemts)
         return vectors, n_elemts
 
     def get_weights(self) -> List[Any]:
@@ -52,13 +61,13 @@ class CountVector(Model):
 
     def fit(self, X: List[List[Any]]) -> float:
         self.vectors, self.n_elemts = self.__get_vectors(X)
-        self.vectors = torch.unique(self.vectors, dim=0)
+        self.vectors = torch.unique(self.vectors, dim=0, sorted=False)
 
         return len(self.vectors)
     
     def predict(self, X: List[List[Any]]) -> List[int]:
         def norm_tensor(x: torch.Tensor) -> torch.Tensor:
-            return x / (x.sum(dim=0) + 1e-10)
+            return x / (x.sum(dim=1).view((-1, 1)) + 1e-10)
 
         vectors, n_elemts = self.__get_vectors(X)
         
@@ -66,13 +75,12 @@ class CountVector(Model):
         if self.n_elemts != n_elemts:
             train_vectors, vectors = convert_same_shape(train_vectors, vectors)
         norm_train, norm_vecs = norm_tensor(train_vectors), norm_tensor(vectors)
-        train_limit, _ = torch.max(norm_train, dim=0)
 
         min_dist = []
         for norm_vec in norm_vecs:
             manh = torch.abs(norm_train - norm_vec).sum(dim=1)
-            limit = torch.max(train_limit, norm_vec).sum()
+            limit = max_elemnt_wise(X1=train_vectors, x2=norm_vec).sum(dim=1)
             dist, _ = torch.min(manh / limit, dim=0)
-            min_dist.append(dist)
+            min_dist.append(dist.detach().tolist())
 
-        return min_dist  # TPDO: add threshold
+        return min_dist  # TODO: add threshold
