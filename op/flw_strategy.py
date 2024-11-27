@@ -11,7 +11,7 @@ import time
 import typing as t
 
 
-# %% Customable methods in the strategy
+# %% Customizable methods in the strategy
 def add_time_client(
     server_round: int, metrics: t.Dict[str, t.Any]
 ) -> t.Dict[str, float]:    

@@ -30,7 +30,7 @@ class FlowerClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config) -> None:
 
-        # %% Customable part client
+        # %% Customizable part client
         print(Color.blue("Starting Local Training"))
         start = time.time()
         self.model.set_weights(parameters[0].tolist())
