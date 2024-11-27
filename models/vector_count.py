@@ -1,4 +1,16 @@
+"""
+ECVC method from: https://dl.acm.org/doi/pdf/10.1145/3660768
 
+Pseudo code:
+------------
+score = min(manh(x, xi) / max(x, xi) for xi in X_train)
+is_abnormal = score >= threshold 
+
+Federated approach: 
+-------------------
+for weigth in client_weights:
+    server_weights.extend(weight)
+"""
 from models._imodel import Model
 
 from typing import Any, List, Tuple
@@ -57,18 +69,17 @@ class CountVector(Model):
         return self.vectors.detach().tolist()
     
     def set_weights(self, weights: List[Any]) -> None:
-        self.vectors = torch.Tensor(weights)
+        self.vectors = torch.unique(torch.Tensor(weights), dim=0, sorted=False)
 
     def fit(self, X: List[List[Any]]) -> float:
-        self.vectors, self.n_elemts = self.__get_vectors(X)
-        self.vectors = torch.unique(self.vectors, dim=0, sorted=False)
+        vectors, self.n_elemts = self.__get_vectors(X)
+        self.set_weights(vectors)
 
         return len(self.vectors)
     
     def predict(self, X: List[List[Any]]) -> List[int]:
         def norm_tensor(x: torch.Tensor) -> torch.Tensor:
             return x / (x.sum(dim=1).view((-1, 1)) + 1e-10)
-
         vectors, n_elemts = self.__get_vectors(X)
         
         train_vectors = self.vectors
@@ -83,4 +94,25 @@ class CountVector(Model):
             dist, _ = torch.min(manh / limit, dim=0)
             min_dist.append(dist.detach().tolist())
 
-        return min_dist  # TODO: add threshold
+        return min_dist  # TODO: add threshold, add idf weights
+    
+
+def update_strategy(
+    server_model: CountVector, clients_weights: List[List[Any]]
+) -> List[Any]:
+
+    max_len_w = torch.Tensor([[]])
+    for weights in clients_weights:
+        if  weights != [] and len(weights[0]) > max_len_w.shape[1]:
+            max_len_w = torch.Tensor(weights)
+
+    conver_weights = []
+    for weights in clients_weights:
+        if weights != []:
+            x1, _ = convert_same_shape(
+                x1=torch.Tensor(weights), x2=max_len_w
+            )
+            conver_weights.extend(x1.detach().tolist())
+
+    server_model.set_weights(conver_weights) 
+    return server_model.get_weights()

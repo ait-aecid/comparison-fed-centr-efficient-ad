@@ -82,5 +82,17 @@ class CountVectorTestCase(unittest.TestCase):
         for p, r in zip(pred, [0, 0.2927, 0]):
             self.assertAlmostEqual(p, r, delta=1e-3)
 
-        
+    def test_update_strategy(self) -> None:
+        count_vector = vc.CountVector()
+        client_weights = [
+            [[1, 2, 0, 0, 0], [0, 0, 1, 0, 1]], [[1, 0], [2, 1]], [[1]], []
+        ]
+        weights = vc.update_strategy(count_vector, clients_weights=client_weights)
+        expected = [
+            [1, 2, 0, 0, 0], [0, 0, 1, 0, 1], [1, 0, 0, 0, 0], [2, 1, 0, 0, 0]
+        ]
+
+        self.assertEqual(len(weights), len(expected))
+        for w in weights:
+            self.assertTrue(w in expected)
 
