@@ -46,6 +46,15 @@ def do_metrics(
 ) -> None: 
 
     print(Color.blue(f"Evaluation round {server_round}:"))
+    print(Color.blue("  - Setting up threshold"))
+
+    start = time.time()
+    model.set_threshold(
+        X_normal=data.test_normal, X_abnormal=data.test_abnormal
+    )
+    end = time.time() - start
+    times[f"Round {server_round} threshold selection"] = end
+
     start = time.time()
     pred_normal = model.predict(data.test_normal)
     pred_abnormal = model.predict(data.test_abnormal)
