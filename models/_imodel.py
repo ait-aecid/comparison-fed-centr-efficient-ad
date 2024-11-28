@@ -34,3 +34,11 @@ class Model(ABC):
         Method to do the prediction 
         """
         pass
+
+    def set_threshold(
+        self, X_normal: t.List[t.List[t.Any]], X_abnormal: t.List[t.List[t.Any]]
+    ) -> None:
+        """
+        Method to setup the threshold (model must be trained first)
+        """
+        pass
