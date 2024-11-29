@@ -92,7 +92,6 @@ class ECVC(Model):
             score_normal=self.score(X_normal),
             score_abnormal=self.score(X_abnormal),
         )
-        print(self.threshold)
     
     def score(self, X: List[List[Any]], batch_size: int = 2000) -> List[float]:
         if not self.is_trained:

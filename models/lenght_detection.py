@@ -67,7 +67,7 @@ class LengthDetection(Model, _RangeClass):
                 self.update(len(xi))
         return 0.
     
-    def score(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
+    def predict(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
         return [xi not in self for xi in X]
 
 

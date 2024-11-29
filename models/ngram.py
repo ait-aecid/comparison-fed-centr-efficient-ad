@@ -11,6 +11,7 @@ Federated approach:
 -------------------
 Not added yet
 """
+from models._thresholds import supervised_threshold_selection, apply_threshold
 from models._imodel import Model
 
 from typing import Any, List, Tuple, Self
@@ -80,7 +81,10 @@ class NGram(Model):
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
     ) -> None:
-        raise NotImplementedError()
+        self.threshold = supervised_threshold_selection(
+            score_normal=self.score(X_normal),
+            score_abnormal=self.score(X_abnormal),
+        )
 
     def fit(self, X: List[List[Any]]) -> float:
         for [seq, e] in split_seq(X, sep=self.n):
@@ -99,6 +103,8 @@ class NGram(Model):
                     if pred != e:
                         errors_count += 1
             results.append(errors_count)
-        return results  # TODO: missing thershold
+        return results
 
+    def predict(self, X: List[List[Any]]) -> List[int]:
+        return apply_threshold(self.score(X), threshold=self.threshold)
     

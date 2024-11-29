@@ -29,7 +29,7 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def score(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
+    def predict(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
         """
         Method to do the prediction 
         """

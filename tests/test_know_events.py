@@ -22,12 +22,12 @@ class KnowEventsTestCase(unittest.TestCase):
         result = [0, 1]
         self.knownEvents.set_weights(set(["a", "b", "c"]))
 
-        self.assertListEqual(result, self.knownEvents.score(sequences))
+        self.assertListEqual(result, self.knownEvents.predict(sequences))
 
     def test_fit(self) -> None:
         sequences = [["a", "b", "a", "c"], ["a", "D"]]
         self.assertEqual(self.knownEvents.fit(sequences), 4)
-        self.assertListEqual(self.knownEvents.score(sequences), [0, 0])
+        self.assertListEqual(self.knownEvents.predict(sequences), [0, 0])
         self.assertSetEqual(
             set(self.knownEvents.get_weights()), set(["a", "b", "c", "D"])
         )

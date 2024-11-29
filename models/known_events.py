@@ -47,7 +47,7 @@ class KnownEvents(Model):
                 self += event
         return len(self)
 
-    def score(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
+    def predict(self, X: t.List[t.List[t.Any]]) -> t.List[int]:
         results = []
         for xi in X:
             results.append(0)

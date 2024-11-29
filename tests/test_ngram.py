@@ -113,10 +113,35 @@ class NGramTestCase(unittest.TestCase):
         self.assertEqual(gram2.matrix["['b', 'b']"][gram2.matrix.vocab.index("a")], 0)
         self.assertEqual(gram2.matrix["['b', 'b']"][gram2.matrix.vocab.index("c")], 1)
 
-    def test_predict(self) -> None:
+    def test_score(self) -> None:
         X = [["a", "b", "b", "b", "c"], ["c"], ["b", "b"]]
         gram2 = ngram.NGram(2)
         gram2.fit(X)
 
         result = gram2.score([["a", "b"], ["b", "b"], ["z", "a"], ["a", "c"]])
         self.assertEqual(result, [0, 1, 2, 1])
+
+    def test_set_threshold(self) -> None:
+        X = [["a", "b", "b", "b", "c"], ["c"], ["b", "b"]]
+        gram2 = ngram.NGram(2)
+        gram2.fit(X)
+
+        gram2.set_threshold(
+            X_normal=[["a", "b"], ["b", "b"], ["a", "c"]],
+            X_abnormal=[["z", "a"]],
+        )
+        self.assertTrue(1 <= gram2.threshold <= 2)
+
+    def test_set_predict(self) -> None:
+        X = [[1, 2, 2, 3, 4], [3], [4, 4]]
+        gram2 = ngram.NGram(2)
+        gram2.fit(X)
+        gram2.set_threshold(
+            X_normal=[[1, 2], [4, 4], [1, 3]],
+            X_abnormal=[[10, 1]],
+        )
+
+        x_test = [[1, 2], [4, 4], [10, 1], [1, 3]]
+        self.assertListEqual(gram2.predict(x_test), [0, 0, 1, 0])
+
+
