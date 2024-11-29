@@ -56,6 +56,7 @@ def do_metrics(
     times[f"Round {server_round} threshold selection"] = end
 
     start = time.time()
+    print(Color.blue("  - Doing evaluation with threshold"))
     pred_normal = model.predict(data.test_normal)
     pred_abnormal = model.predict(data.test_abnormal)
     end = time.time() - start
@@ -119,7 +120,7 @@ class CustomStrategy(fl.server.strategy.Strategy):
 
     def evaluate(self, server_round, parameters):
         weights = fl.common.parameters_to_ndarrays(parameters)[0].tolist()
-        self.model.set_weights(set(weights))
+        self.model.set_weights(weights)
         do_metrics(
             server_round=server_round, 
             data=self.data, 

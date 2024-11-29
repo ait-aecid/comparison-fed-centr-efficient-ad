@@ -54,7 +54,7 @@ class LengthDetectionTestCase(unittest.TestCase):
         print(length.get_weights())
 
         test = [["a"], [1, 2, 3], [1, 2, 3, 4, 5, 6]]
-        self.assertListEqual(length.predict(test), [1, 0, 1])
+        self.assertListEqual(length.score(test), [1, 0, 1])
 
     def test_update_strategy(self) -> None:
         length = LengthDetection()

@@ -118,5 +118,5 @@ class NGramTestCase(unittest.TestCase):
         gram2 = ngram.NGram(2)
         gram2.fit(X)
 
-        result = gram2.predict([["a", "b"], ["b", "b"], ["z", "a"], ["a", "c"]])
+        result = gram2.score([["a", "b"], ["b", "b"], ["z", "a"], ["a", "c"]])
         self.assertEqual(result, [0, 1, 2, 1])

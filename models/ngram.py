@@ -77,12 +77,17 @@ class NGram(Model):
     def set_weights(self, weights: List[Any]) -> None:
         self.matrix = self.matrix.from_values(weights) 
 
+    def set_threshold(
+        self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
+    ) -> None:
+        raise NotImplementedError()
+
     def fit(self, X: List[List[Any]]) -> float:
         for [seq, e] in split_seq(X, sep=self.n):
             self.matrix.update(str(seq), e)
         return 0.
     
-    def predict(self, X: List[List[Any]]) -> List[int]:
+    def score(self, X: List[List[Any]]) -> List[int]:
         results = []
         for xi in X:
             errors_count = 0
