@@ -1,5 +1,5 @@
 
-import models.ngram2 as ngram
+import models.ngram as ngram
 
 import unittest
 
