@@ -2,7 +2,7 @@
 import models.lenght_detection as ld
 import models.edit_distance as edit
 import models.known_events as ke
-import models.ngram as ngram
+import models.ngram2 as ngram
 import models.ecvc as vc
 
 
