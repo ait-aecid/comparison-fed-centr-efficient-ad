@@ -14,3 +14,7 @@ Current scripts in the repository:
 
 *   **client_app.py**: start a client server.
 *   **server_app.py**: start the main server.
+
+## Federated learning diagram
+The strategy was created following the [flower documentation](https://flower.ai/docs/framework/how-to-implement-strategies.html).
+![diagram](img/diagram.jpg)
