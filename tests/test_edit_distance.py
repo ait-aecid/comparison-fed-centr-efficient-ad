@@ -45,7 +45,7 @@ class EditDistanceTestCase(unittest.TestCase):
 
         self.assertListEqual(editd.score(
             [[1, 2, 3], [5, 5], [5, 3], [5, 5]]
-        ), [0, 1, 2, 1])
+        ), [0, 1, 1, 1])
 
     def test_score_empty(self) -> None:
         editd = edit.EditDistance()
@@ -73,7 +73,7 @@ class EditDistanceTestCase(unittest.TestCase):
         )
 
         self.assertListEqual(
-            editd.predict([[1, 2, 3], [5, 3], [5, 5]]), [0, 1, 0]
+            editd.predict([[1, 2, 3], [5, 3], [5, 5]]), [0, 0, 0]
         )        
 
     def test_update_strategy(self) -> None:

@@ -1,9 +1,23 @@
+"""
+Edit Distance method from: https://dl.acm.org/doi/pdf/10.1145/3660768
+
+Pseudo code:
+------------
+score = LevensheteinDistance(train_seqs, seq) 
+is_abnormal = score >= threshold 
+
+Federated approach: 
+-------------------
+for weigth in client_weights:
+    server_weights.extend(weight)
+"""
 from models._thresholds import apply_threshold, supervised_threshold_selection
 from models._imodel import Model
 
 from typing import Any, List, Tuple
 import Levenshtein as Leve
 from tqdm import tqdm 
+import math
 
 
 def levenshtein_distance(
@@ -36,15 +50,20 @@ class EditDistance(Model):
         if len(self.sequences) == 0:
             return [-1 for _ in X]
         scores, cache = [], {}
+        min_dist = 2
         for xi in tqdm(X):
             if (xi_ := tuple(xi)) in cache.keys():
                 scores.append(cache[xi_])
             else:
                 scores.append(min([
-                    levenshtein_distance(xi_, seq) for seq in self.sequences
+                    levenshtein_distance(xi_, seq, score_cutoff=math.floor(
+                        (n := max(len(xi), len(seq))) * min_dist
+                    ) / n) 
+                    for seq in self.sequences
                 ]))
+                min_dist = min_dist if min_dist <= scores[-1] else scores[-1]
                 cache[xi_] = scores[-1]
-        return scores  # TODO: ADD score_cutoff
+        return scores
 
     def fit(self, X: List[List[Any]]) -> float:
         for xi in X:

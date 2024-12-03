@@ -32,7 +32,6 @@ def supervised_threshold_selection(
             pred_normal=apply_threshold(normal, threshold=thres),
             pred_abnormal=apply_threshold(abnormal, threshold=thres),
         )
-        #print(getattr(metrics, metric))
         results.append(getattr(metrics, metric))
 
     return thresholds[torch.argmax(torch.Tensor(results))].detach().tolist()
