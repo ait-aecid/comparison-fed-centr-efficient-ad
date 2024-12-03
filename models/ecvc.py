@@ -93,7 +93,7 @@ class ECVC(Model):
             score_abnormal=self.score(X_abnormal),
         )
     
-    def score(self, X: List[List[Any]], batch_size: int = 2000) -> List[float]:
+    def score(self, X: List[List[Any]], batch_size: int = 200) -> List[float]:
         if not self.is_trained:
             return torch.zeros(len(X)).detach().tolist()
         

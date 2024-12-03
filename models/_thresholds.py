@@ -8,7 +8,7 @@ import typing as t
 def apply_threshold(
     score: t.List[float] | torch.Tensor, threshold: float, 
 ) -> t.List[int]:
-    return (torch.Tensor(score) >= threshold).detach().tolist()
+    return (torch.Tensor(score) >= threshold).int().detach().tolist()
 
 
 def supervised_threshold_selection(
