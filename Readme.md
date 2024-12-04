@@ -10,8 +10,6 @@ The datasets that were use are:
 
 ## Scripts
 Current scripts in the repository:
-*   **script_reformat.py**: reformat the dataset in the correct format.
-
 *   **client_app.py**: start a client server.
 *   **server_app.py**: start the main server.
 
