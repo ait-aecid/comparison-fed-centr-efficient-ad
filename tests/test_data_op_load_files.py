@@ -75,6 +75,8 @@ class ReadFilesTestCase(unittest.TestCase):
             args=args, normal=data["Normal"],
         )
 
+        self.assertEqual(args.amount_clients, len(splits))
+        self.assertEqual(args.amount_clients, len(splits2))
         self.assertFalse(splits[0].equals(splits[1]))
         m = 0
         for i in range(len(splits)):

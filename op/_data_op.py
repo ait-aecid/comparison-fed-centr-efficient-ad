@@ -1,3 +1,4 @@
+from op._dist_op import split_by_dist
 
 import pandas as pd
 import numpy as np
@@ -61,12 +62,8 @@ def split_in_clients(
     splits = []
     idx = Random.shufle_idx(args.seed_number, range(len(normal)))
 
-    n = int(len(idx) / args.amount_clients)
-    for i in range(args.amount_clients):
-        if i < args.amount_clients - 1:
-            splits.append(normal.iloc[idx[i * n: (i + 1) * n]])
-        else:
-            splits.append(normal.iloc[idx[i * n:]])
+    for i, j in split_by_dist(args=args, n_idxs=len(idx)):
+        splits.append(normal.iloc[idx[i:j]])
 
     return splits 
 
