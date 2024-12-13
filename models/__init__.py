@@ -2,6 +2,7 @@
 import models.lenght_detection as ld
 import models.edit_distance as edit
 import models.known_events as ke
+import models.combine as com
 import models.ngram as ngram
 import models.ecvc as vc
 
@@ -26,3 +27,5 @@ _list = {
         "Method": edit.EditDistance, "Update": edit.update_strategy,
     }
 }
+
+_comb = {"Method": com.Combine, "Update": com.update_strategy}
