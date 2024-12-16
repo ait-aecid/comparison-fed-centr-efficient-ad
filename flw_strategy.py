@@ -83,12 +83,11 @@ class CustomStrategy(fl.server.strategy.Strategy):
     ) -> None:
         self.num_clients = int(config["amount_clients"])
         self.data = load_data(config=config, num_client=0, num_run=num_run)
-        self.model_class, self.update_strategy = model, update_strategy
+        self.model, self.update_strategy = model, update_strategy
         self.times = {}
         print(self.data)
 
     def initialize_parameters(self, client_manager):
-        self.model = self.model_class()
         return fl.common.ndarrays_to_parameters([self.model.get_weights()])
 
     def configure_fit(self, server_round, parameters, client_manager):

@@ -1,7 +1,7 @@
 import flwr as fl
 
 from flw_strategy import CustomStrategy
-from models import  _list
+from models import  model_init, _list
 from op.aux import Color
 
 import argparse
@@ -12,7 +12,7 @@ import yaml
 parser = argparse.ArgumentParser(description="Server script")
 parser.add_argument("--config", required=True, help="Configuration file")
 parser.add_argument(
-    "--method", help=f"Select one of this {list(_list.keys())}", required=True
+    "--method", help=f"Select one of this {list(_list.keys())}", required=True, nargs="+"
 )
 parser.add_argument("--run_number", default=0, help="Run number (Default: 0)", type=int)
 
@@ -32,9 +32,9 @@ if __name__ == "__main__":
         ),
         strategy=CustomStrategy(
             config=config["Dataset"],
-            model=_list[args.method]["Method"],
+            model=model_init(args.method)["Method"],
             num_run=args.run_number,
-            update_strategy=_list[args.method]["Update"]
+            update_strategy=model_init(args.method)["Update"]
         )
     )
 

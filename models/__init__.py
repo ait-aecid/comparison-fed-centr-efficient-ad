@@ -7,6 +7,9 @@ import models.ngram as ngram
 import models.ecvc as vc
 
 
+from typing import List
+
+
 _list = {
     "KnowEvents": {
         "Method": ke.KnownEvents, "Update": ke.update_strategy,
@@ -28,4 +31,23 @@ _list = {
     }
 }
 
-_comb = {"Method": com.Combine, "Update": com.update_strategy}
+
+def model_init(names: List[str]) -> dict:
+    """
+    Return the model to be initialize and its updated_strategy
+
+    Format: {'Method': Model, 'Update': update_strategy}
+    """
+    if len(names) == 1:
+        name = names[0]
+        return {"Method": _list[name]["Method"](), "Update": _list[name]["Update"]}
+    
+    return {
+        "Method": com.Combine(
+            models=[_list[name]["Method"]() for name in names], 
+            update_funcs=[_list[name]["Update"] for name in names]
+        ),
+        "Update": com.update_strategy
+    }
+    
+

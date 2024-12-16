@@ -1,5 +1,5 @@
 from models._imodel import Model
-from models import _list
+from models import model_init, _list
 
 from dataloader import load_data
 from op.aux import Color
@@ -25,7 +25,7 @@ class FlowerClient(fl.client.NumPyClient):
             config=config, num_client=num_client, num_run=num_run
         )
         print(self.data)
-        self.model = model()
+        self.model = model
         self.n = len(self.data.test_abnormal) + len(self.data.test_normal)
 
     def fit(self, parameters, config) -> None:
@@ -48,7 +48,7 @@ parser = argparse.ArgumentParser(description="Server script")
 parser.add_argument("--config", required=True, help="Configuration file")
 parser.add_argument("--num_client", required=True, type=int)
 parser.add_argument(
-    "--method", help=f"Select one of this {list(_list.keys())}", required=True
+    "--method", help=f"Select one of this {list(_list.keys())}", required=True, nargs="+"
 )
 parser.add_argument("--run_number", default=0, help="Run number (Default: 0)", type=int)
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             config=config["Dataset"], 
             num_run=args.run_number, 
             num_client=num_client,
-            model=_list[args.method]["Method"]
+            model=model_init(args.method)["Method"]
         ).to_client()
     )
 
