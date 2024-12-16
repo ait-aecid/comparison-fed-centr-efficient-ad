@@ -32,7 +32,7 @@ class LineDist(UniformDist):
         super().__init__(seed)
 
     def _equation(self, x: np.ndarray) -> np.ndarray:
-        return - x + 1.0001
+        return - x + 1.2
 
     def sample(self, n: int) -> np.ndarray:
         return self._equation(np.linspace(start=0, stop=1, num=n)) 

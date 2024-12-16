@@ -46,7 +46,7 @@ class DistTestCase(unittest.TestCase):
         sample = lindist.sample(5).tolist()
         
         self.assertListEqual(
-            [1.0001, 0.7501, 0.5001, 0.2501, 9.999999999998899e-05], sample
+            [1.2, 0.95, 0.7, 0.44999999999999996, 0.19999999999999996], sample
         )
 
     def test_call_line(self) -> None:
@@ -69,14 +69,14 @@ class DistTestCase(unittest.TestCase):
         args.amount_clients = 4
         gen = dist.split_by_dist(args, n_idxs=20)
 
-        self.assertTupleEqual((0, 10), next(gen))
-        self.assertTupleEqual((10, 17), next(gen))
-        self.assertTupleEqual((17, 17), next(gen))
-        self.assertTupleEqual((17, 20), next(gen))
+        self.assertTupleEqual((0, 9), next(gen))
+        self.assertTupleEqual((9, 15), next(gen))
+        self.assertTupleEqual((15, 16), next(gen))
+        self.assertTupleEqual((16, 20), next(gen))
 
         args.seed_number = 0
         gen = dist.split_by_dist(args, n_idxs=20)
-        self.assertTupleEqual((0, 3), next(gen))
-        self.assertTupleEqual((3, 3), next(gen))
-        self.assertTupleEqual((3, 10), next(gen))
-        self.assertTupleEqual((10, 20), next(gen))
+        self.assertTupleEqual((0, 4), next(gen))
+        self.assertTupleEqual((4, 5), next(gen))
+        self.assertTupleEqual((5, 11), next(gen))
+        self.assertTupleEqual((11, 20), next(gen))
