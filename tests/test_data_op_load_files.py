@@ -9,6 +9,7 @@ args = read_.Arguments.from_config({
     "amount_clients": 10,
     "seed_number": 7,
     "train_per": 0.1,
+    "dist_method": "Uniform"
 })
 data = read_.read_files(args)
 

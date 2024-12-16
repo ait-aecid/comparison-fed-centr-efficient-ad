@@ -10,4 +10,5 @@ Dataset:
     amount_clients: 1
     seed_number: 10
     train_per: 0.01
+    dist_method: Uniform
 

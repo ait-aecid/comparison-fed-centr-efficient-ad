@@ -6,6 +6,7 @@ General:
 
 Dataset:
     dataset_path: datasets/BGL
-    amount_clients: 1 
+    amount_clients: 1
     seed_number: 8
     train_per: 0.01
+    dist_method: Uniform
