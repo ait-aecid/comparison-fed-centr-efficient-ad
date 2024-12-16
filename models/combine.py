@@ -1,4 +1,16 @@
+"""
+Combine methods from: https://dl.acm.org/doi/pdf/10.1145/3660768
 
+Pseudo code:
+------------
+Methods -> [method_1, method_2 ..]
+X -> [(sequence, next_event) ... ]
+prediction = method_1(X) or method_2(X) ... 
+
+Federated approach: 
+-------------------
+use the update strategy of each method individually
+"""
 from models._imodel import Model
 
 import numpy as np
