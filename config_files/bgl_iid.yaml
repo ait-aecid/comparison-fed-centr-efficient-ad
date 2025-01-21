@@ -10,3 +10,4 @@ Dataset:
     seed_number: 8
     train_per: 0.01
     dist_method: Uniform
+    dist_plot_path: "distribution_plot.png"
