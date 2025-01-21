@@ -1,11 +1,23 @@
 """
 Distributions to split the data among the clients.
 """
+import matplotlib.pyplot as plt
 import typing as t
 import numpy as np
 
 
 Arguments = t.NewType("Arguments", object)
+
+
+def plot_dist(dist: t.List[float], plot_path: str) -> None:
+    plt.bar(range(len(dist)), dist * 100)
+    
+    plt.title("Data distribution among clients", fontsize=20)
+    plt.xlabel("Client ID", fontsize=15)
+    plt.ylabel("Percentage dataset (%)", fontsize=15)
+
+    plt.savefig(plot_path)
+    plt.close()
 
 
 class UniformDist:
@@ -27,7 +39,12 @@ class UniformDist:
 
         np.random.seed(self.seed)
         np.random.shuffle(values)
-        return (values / sum_values).tolist()
+        dist = (values / sum_values)
+
+        if plot_path is not None:
+            plot_dist(dist, plot_path)
+
+        return dist.tolist()
 
 
 class LineDist(UniformDist):
@@ -76,7 +93,10 @@ _dist_methods = {
 
 
 def split_by_dist(args: Arguments, n_idxs: int) -> t.Iterator[t.Tuple[int, int]]:
-    dist = _dist_methods[args.dist_method](args.seed_number)(args.amount_clients)
+    dist = _dist_methods[args.dist_method](args.seed_number)(
+        n_clients=args.amount_clients,
+        plot_path=None if "dist_plot_path" not in dir(args) else args.dist_plot_path
+    )
     value = 0
     for i in range(args.amount_clients):
         old_value = value

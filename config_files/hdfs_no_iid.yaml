@@ -11,4 +11,5 @@ Dataset:
     seed_number: 10
     train_per: 0.01
     dist_method: LogNormal
+    dist_plot_path: "distribution_plot.png"
 
