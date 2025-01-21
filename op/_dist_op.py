@@ -38,9 +38,24 @@ class LineDist(UniformDist):
         return self._equation(np.linspace(start=0, stop=1, num=n)) 
 
 
+class LogNormalDist(UniformDist):
+    def __init__(self, seed: int, mu: float = 0, std: float = 0.25) -> None:
+        super().__init__(seed)
+        self.mu, self.std = mu, std
+
+    def _equation(self, x: np.ndarray) -> np.ndarray:
+        value_1 = 1 / (x * self.std * np.sqrt(2 * np.pi))
+        value_2 = - (np.log(x) - self.mu) ** 2 / (2 * self.std ** 2)
+        return value_1 * np.exp(value_2)
+
+    def sample(self, n: int) -> np.ndarray:
+        return self._equation(np.linspace(start=0.5, stop=2., num=n)) 
+
+
 _dist_methods = {
     "Uniform": UniformDist, 
     "Line": LineDist,
+    "LogNormal": LogNormalDist,
 }
 
 

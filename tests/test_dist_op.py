@@ -49,6 +49,19 @@ class DistTestCase(unittest.TestCase):
             [1.2, 0.95, 0.7, 0.44999999999999996, 0.19999999999999996], sample
         )
 
+    def test_get_lognormal_sample(self) -> None:
+        lindist = dist.LogNormalDist(seed=4)
+        sample = lindist.sample(5).tolist()
+        
+        self.assertListEqual([
+            0.06834949509643216, 
+            1.5812918791956432, 
+            0.8571588005625581, 
+            0.14898722702920894, 
+            0.01708737377410804
+            ], sample
+        )
+
     def test_call_line(self) -> None:
         lindist = dist.LineDist(seed=4)
         result = lindist(n_clients=4, plot_path=None)
@@ -61,6 +74,20 @@ class DistTestCase(unittest.TestCase):
 
         lindist = dist.LineDist(seed=4)
         result2 = lindist(n_clients=4, plot_path=None)
+        self.assertTrue(all([r1 == r2 for r1, r2 in zip(result, result2)]))
+
+    def test_call_lognormal(self) -> None:
+        logNdist = dist.LogNormalDist(seed=4)
+        result = logNdist(n_clients=4, plot_path=None)
+        self.assertEqual(4, len(result))
+        self.assertAlmostEqual(1., sum(result), delta=0.01)
+
+        logNdist = dist.LogNormalDist(seed=10)
+        result2 = logNdist(n_clients=4, plot_path=None)
+        self.assertFalse(all([r1 == r2 for r1, r2 in zip(result, result2)]))
+
+        logNdist = dist.LogNormalDist(seed=4)
+        result2 = logNdist(n_clients=4, plot_path=None)
         self.assertTrue(all([r1 == r2 for r1, r2 in zip(result, result2)]))
 
     def test_split_by_dist_line(self) -> None:
@@ -80,3 +107,21 @@ class DistTestCase(unittest.TestCase):
         self.assertTupleEqual((4, 5), next(gen))
         self.assertTupleEqual((5, 11), next(gen))
         self.assertTupleEqual((11, 20), next(gen))
+
+    def test_split_by_dist_logN(self) -> None:
+        args = DummyArgs()
+        args.dist_method = "LogNormal"
+        args.amount_clients = 4
+        gen = dist.split_by_dist(args, n_idxs=20)
+
+        self.assertTupleEqual((0, 1), next(gen))
+        self.assertTupleEqual((1, 17), next(gen))
+        self.assertTupleEqual((17, 17), next(gen))
+        self.assertTupleEqual((17, 20), next(gen))
+
+        args.seed_number = 0
+        gen = dist.split_by_dist(args, n_idxs=20)
+        self.assertTupleEqual((0, 3), next(gen))
+        self.assertTupleEqual((3, 3), next(gen))
+        self.assertTupleEqual((3, 19), next(gen))
+        self.assertTupleEqual((19, 20), next(gen))
