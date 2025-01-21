@@ -1,9 +1,9 @@
 
 # Arguments run
 RUN_NUMBER=0
-CONFIG_PATH="config_files/bgl_no_iid.yaml"
-NUM_CLIENTS=5
-METHODS="KnowEvents 3-Gram"
+CONFIG_PATH="config_files/hdfs_no_iid.yaml"
+NUM_CLIENTS=10
+METHODS="KnowEvents"
 
 ITER=$(($NUM_CLIENTS - 1))
 for i in $(seq 0 $ITER); do 

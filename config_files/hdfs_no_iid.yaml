@@ -7,8 +7,8 @@ General:
 
 Dataset:
     dataset_path: datasets/HDFS
-    amount_clients: 1
+    amount_clients: 10
     seed_number: 10
     train_per: 0.01
-    dist_method: Line
+    dist_method: LogNormal
 
