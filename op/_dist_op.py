@@ -1,4 +1,6 @@
-
+"""
+Distributions to split the data among the clients.
+"""
 import typing as t
 import numpy as np
 
@@ -7,6 +9,7 @@ Arguments = t.NewType("Arguments", object)
 
 
 class UniformDist:
+    """The UniformDist class is responsible for generating a uniform distribution"""
     def __init__(self, seed: int) -> None:
         self.seed = seed
 
@@ -28,6 +31,11 @@ class UniformDist:
 
 
 class LineDist(UniformDist):
+    """
+    The LineDist class is responsible for generating a line distribution
+
+    Equation: y = - x + 1.2
+    """
     def __init__(self, seed: int) -> None:
         super().__init__(seed)
 
@@ -39,6 +47,14 @@ class LineDist(UniformDist):
 
 
 class LogNormalDist(UniformDist):
+    """
+    The LogNormalDist class is responsible for generating a lognormal distribution.
+
+    Following: https://github.com/SMILELab-FL/FedLab
+
+    Equation: 
+    y = 1 / (x * std * sqrt(2 * pi)) * exp(- (log(x) - mu) ** 2 / (2 * std ** 2))
+    """
     def __init__(self, seed: int, mu: float = 0, std: float = 0.25) -> None:
         super().__init__(seed)
         self.mu, self.std = mu, std
