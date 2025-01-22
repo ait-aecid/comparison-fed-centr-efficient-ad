@@ -1,7 +1,7 @@
 
 # Arguments run
 RUN_NUMBER=0
-CONFIG_PATH="config_files/hdfs_no_iid.yaml"
+CONFIG_PATH="config_files/bgl_no_iid.yaml"
 NUM_CLIENTS=10
 METHODS="KnowEvents"
 
