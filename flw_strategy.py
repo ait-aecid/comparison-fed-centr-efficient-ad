@@ -80,10 +80,13 @@ class CustomStrategy(fl.server.strategy.Strategy):
         config: t.Dict[str, t.Any],
         model: Model,
         num_run: int,
+        amount_clients: int,
         update_strategy: t.Callable[[Model, t.List[t.List[t.Any]]], t.List[t.Any]]
     ) -> None:
-        self.num_clients = int(config["amount_clients"])
-        self.data = load_data(config=config, num_client=0, num_run=num_run)
+        self.num_clients = amount_clients 
+        self.data = load_data(
+            config=config, num_client=0, num_run=num_run, amount_clients=amount_clients
+        )
         self.model, self.update_strategy = model, update_strategy
         self.times = {}
         print(self.data)

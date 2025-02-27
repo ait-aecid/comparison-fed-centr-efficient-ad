@@ -15,6 +15,7 @@ parser.add_argument(
     "--method", help=f"Select one of this {list(_list.keys())}", required=True, nargs="+"
 )
 parser.add_argument("--run_number", default=0, help="Run number (Default: 0)", type=int)
+parser.add_argument("--amount_clients", required=True, type=int)
 
 
 if __name__ == "__main__":
@@ -34,7 +35,8 @@ if __name__ == "__main__":
             config=config["Dataset"],
             model=model_init(args.method)["Method"],
             num_run=args.run_number,
-            update_strategy=model_init(args.method)["Update"]
+            update_strategy=model_init(args.method)["Update"],
+            amount_clients=args.amount_clients,
         )
     )
 

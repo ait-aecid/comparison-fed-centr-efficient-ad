@@ -34,7 +34,7 @@ class DataWrapper:
 
 
 def load_data(
-    config: t.Dict[str, t.Any], num_client: int, num_run: int = 0,
+    config: t.Dict[str, t.Any], num_client: int, amount_clients: int, num_run: int = 0
 ) -> DataWrapper:
     """
     Load data for each client.
@@ -50,6 +50,7 @@ def load_data(
     ```
     """
     print(Color.purple("Load data pipeline:"))
+    config["amount_clients"] = amount_clients
     args = data_ops.Arguments.from_config(config)
 
     print(Color.blue("1) Load datasets"), args.dataset_path)

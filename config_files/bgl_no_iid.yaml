@@ -6,7 +6,6 @@ General:
 
 Dataset:
     dataset_path: datasets/BGL
-    amount_clients: 10
     seed_number: 8
     train_per: 0.01
     dist_method: LogNormal
