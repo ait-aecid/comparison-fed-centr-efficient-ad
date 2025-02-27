@@ -1,4 +1,7 @@
-
+"""
+This file has some hardcode parts that only work for the current setup format.
+The hardcode parts are marked with #HARDCODE
+"""
 import pandas as pd
 import numpy as np
 import typing as t
@@ -6,6 +9,7 @@ import typing as t
 from op._metrics import (
     Metrics, present_results, calculate_false_true_pred
 )
+from op.aux import save_csv_row
 
 
 class TimeResults:
@@ -19,16 +23,23 @@ class TimeResults:
         return {"NaN": "(No stats found)"} if self.time is None else self.time
     
     def format_time(self) -> t.Dict[str, float]:
-        """Note, this only works for current setup format"""
+        """Note, this only works for current setup format #HARDCODE"""
         data = self.as_dict()
         if 3 > len(data):
             return {} 
         return {
-            "Time update": data["Round 1 update"],
-            "Threshold selection": data["Round 1 threshold selection"],
-            "Evaluation": data["Round 1 evaluation"],
-            "Average clients": np.mean([data[d] for d in data.keys() if d.startswith("Round 1 Time")]),
-            "Std clients": np.std([data[d] for d in data.keys() if d.startswith("Round 1 Time")]),
+            "time agregation": data["Round 1 update"],
+            "time threshold sel.": data["Round 1 threshold selection"],
+            "time inference": data["Round 1 evaluation"],
+            "time max local training": np.max(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
+            "time avg. local training": np.mean(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
+            "time std. local training": np.std(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
         }
 
 
@@ -84,7 +95,8 @@ class Results:
         )
         if path is None:
             return table 
-        table.to_csv(path, index=False)
+        if len(table.columns) > 12:  # Base only in current experiment setup #HARDCODE
+            save_csv_row(path, data=table)
 
 
 def apply_metrics(
