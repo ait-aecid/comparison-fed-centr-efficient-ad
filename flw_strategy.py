@@ -63,12 +63,13 @@ def do_metrics(
     times[f"Round {server_round} evaluation"] = end
 
     print(Color.yellow(
-        apply_metrics(
+        results := apply_metrics(
             pred_normal=pred_normal,
             pred_abnormal=pred_abnormal,
             times=times,
         )
     ))
+    results.as_csv("results.csv")
 
 
 # %% Strategy
