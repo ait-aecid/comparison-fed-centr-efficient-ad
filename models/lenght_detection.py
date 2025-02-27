@@ -48,6 +48,10 @@ class _RangeClass:
 
 
 class LengthDetection(Model, _RangeClass):
+    def __init__(self):
+        Model.__init__(self, name="LengthDetection")
+        _RangeClass.__init__(self)
+
     def update(self, value: int) -> None:
         [min_, max_] = self.get_weights()
         self.set_weights([

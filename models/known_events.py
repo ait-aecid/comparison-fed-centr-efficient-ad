@@ -20,6 +20,7 @@ import typing as t
 
 class KnownEvents(Model):
     def __init__(self) -> None:
+        super().__init__(name="KnownEvents")
         self.events = set()
 
     def __contains__(self, x: t.Any) -> bool:

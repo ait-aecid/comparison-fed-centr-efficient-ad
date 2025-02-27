@@ -87,15 +87,17 @@ class Results:
     def __str__(self) -> str:
         return self.__repr__()
     
-    def as_csv(self, path: str | None) -> None | pd.DataFrame: 
+    def as_csv(
+        self, path: str | None, prefix: dict = {}
+    ) -> None | pd.DataFrame: 
         """If None return the DataFrame instead"""
         time = self.time_stats.format_time()
         table = pd.DataFrame(
-            {k : [v] for k, v in self.as_dict()["Metrics"].items()} | time
+            prefix | {k : [v] for k, v in self.as_dict()["Metrics"].items()} | time
         )
         if path is None:
             return table 
-        if len(table.columns) > 12:  # Base only in current experiment setup #HARDCODE
+        if len(table.columns) > 12 + len(prefix):  # Base only in current setup #HARDCODE
             save_csv_row(path, data=table)
 
 

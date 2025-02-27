@@ -53,6 +53,7 @@ class GramSet:
 
 class NGram(Model):
     def __init__(self, n: int) -> None:
+        super().__init__(name=f"{n}-Gram")
         self.gramset = GramSet()
         self.n = n
 

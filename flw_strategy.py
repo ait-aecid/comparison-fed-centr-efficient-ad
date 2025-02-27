@@ -69,7 +69,14 @@ def do_metrics(
             times=times,
         )
     ))
-    results.as_csv("results.csv")
+    prefix = {
+        "Method": [model.name],
+        "Seed": data.args.seed_number,
+        "N_run": data.run_number,
+        "N_Clients": data.args.amount_clients, 
+        "Dataset": data.args.dataset_path,
+    }
+    results.as_csv("results.csv", prefix=prefix)
 
 
 # %% Strategy

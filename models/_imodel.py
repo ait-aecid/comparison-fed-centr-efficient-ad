@@ -7,6 +7,9 @@ import typing as t
 
 
 class Model(ABC):
+    def __init__(self, name: str = "Model") -> None:
+        self.name = name
+
     @abstractmethod
     def set_weights(self, weights: t.List[t.Any]) -> None: 
         """

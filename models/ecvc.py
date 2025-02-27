@@ -63,6 +63,7 @@ def norm_tensor(x: torch.Tensor) -> torch.Tensor:
 
 class ECVC(Model):
     def __init__(self) -> None:
+        super().__init__(name="ECVC")
         self.vectors = torch.Tensor([])
         self.n_elemts = 0
         self.is_trained = False

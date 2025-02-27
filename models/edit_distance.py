@@ -28,6 +28,7 @@ def levenshtein_distance(
 
 class EditDistance(Model):
     def __init__(self) -> None:
+        super().__init__(name="EditDistance")
         self.sequences = set()
 
     def __add__(self, value: List[Any]) -> None:
