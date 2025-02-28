@@ -11,7 +11,9 @@ Federated approach:
 for weigth in client_weights:
     server_weights.extend(weight)
 """
-from models._thresholds import apply_threshold, supervised_threshold_selection
+from models._thresholds import (
+    supervised_threshold_selection, apply_threshold, Thresholds
+)
 from models._imodel import Model
 
 from typing import Any, List, Tuple
@@ -27,8 +29,9 @@ def levenshtein_distance(
 
 
 class EditDistance(Model):
-    def __init__(self) -> None:
-        super().__init__(name="EditDistance")
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        super().__init__(name="EditDistance", thres=thres.edit)
+        self.get_thres = self.threshold is None
         self.sequences = set()
 
     def __add__(self, value: List[Any]) -> None:
@@ -43,9 +46,11 @@ class EditDistance(Model):
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
     ) -> None:
-        self.threshold = supervised_threshold_selection(
-            score_abnormal=self.score(X_abnormal), score_normal=self.score(X_normal)
-        )
+        if self.get_thres:
+            self.threshold = supervised_threshold_selection(
+                score_normal=self.score(X_normal),
+                score_abnormal=self.score(X_abnormal),
+            )
 
     def score(self, X: List[List[Any]]) -> List[int]:
         if len(self.sequences) == 0:

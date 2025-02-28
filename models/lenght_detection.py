@@ -9,6 +9,7 @@ Federated approach:
 -------------------
 We take the min and max value from all the clients
 """
+from models._thresholds import Thresholds
 from models._imodel import Model
 
 import typing as t
@@ -48,8 +49,8 @@ class _RangeClass:
 
 
 class LengthDetection(Model, _RangeClass):
-    def __init__(self):
-        Model.__init__(self, name="LengthDetection")
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        Model.__init__(self, name="LengthDetection", thres=thres.length)
         _RangeClass.__init__(self)
 
     def update(self, value: int) -> None:

@@ -1,8 +1,9 @@
 from metrics import apply_metrics
-import torch
-from tqdm import tqdm 
+from op.aux import Color
 
+from tqdm import tqdm 
 import typing as t
+import torch
 
 
 def apply_threshold(
@@ -34,4 +35,31 @@ def supervised_threshold_selection(
         )
         results.append(getattr(metrics, metric))
 
-    return thresholds[torch.argmax(torch.Tensor(results))].detach().tolist()
+    final_thres = thresholds[torch.argmax(torch.Tensor(results))].detach().tolist()
+    print(Color.yellow(f"Final threshold {final_thres}"))
+
+    return final_thres
+
+
+# %% Thresholds setup for the different experiments
+class Thresholds:
+    events: float | None = None
+    length: float | None = None
+    ecvc: float | None = None 
+    gram2: float | None = None 
+    gram3: float | None = None
+    edit: float | None = None
+
+
+class ThresHDFS(Thresholds):
+    ecvc: float | None = 0.00228
+    gram2: float | None = 0.0224
+    gram3: float | None = 0.0147
+    edit: float | None = 1.0030
+
+
+class ThresBGL(Thresholds):
+    ecvc: float | None = 0.0018
+    gram2: float | None = 0.0
+    gram3: float | None = 0.0
+    edit: float | None = 1.0030

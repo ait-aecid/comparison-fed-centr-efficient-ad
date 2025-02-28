@@ -2,8 +2,8 @@
 
 # Default arguments
 DEFAULT_RUN_NUMBER=2
-DEFAULT_CONFIG_PATH="config_files/bgl_iid.yaml"
-DEFAULT_NUM_CLIENTS=5
+DEFAULT_CONFIG_PATH="config_files/hdfs_iid.yaml"
+DEFAULT_NUM_CLIENTS=1
 DEFAULT_METHODS="2-Gram LengthDetection"
 
 
@@ -21,7 +21,6 @@ echo "      - CONFIG_PATH: $CONFIG_PATH"
 echo "      - NUM_CLIENTS: $NUM_CLIENTS"
 echo "      - METHODS: $METHODS"
 sleep 2
-sleep 1000
 
 
 # Run main server

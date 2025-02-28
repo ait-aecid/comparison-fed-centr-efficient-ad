@@ -12,15 +12,15 @@ Federated approach:
 -------------------
 The sets of the diferent clients are combine in a set union operation
 """
-
+from models._thresholds import Thresholds
 from models._imodel import Model
 
 import typing as t
 
 
 class KnownEvents(Model):
-    def __init__(self) -> None:
-        super().__init__(name="KnownEvents")
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        super().__init__(name="KnownEvents", thres=thres.events)
         self.events = set()
 
     def __contains__(self, x: t.Any) -> bool:
