@@ -25,6 +25,8 @@ class Color:
 
 
 def save_csv_row(path: str, data: pd.DataFrame) -> None:
+    data.columns = [col.replace(" ", "_") for col in data.columns]
+
     if os.path.exists(path):
         old_data = pd.read_csv(path)
         data = pd.concat([old_data, data])

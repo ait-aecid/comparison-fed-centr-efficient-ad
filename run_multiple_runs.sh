@@ -4,7 +4,7 @@
 CONFIG_FILES=("config_files/hdfs_iid.yaml" "config_files/bgl_iid.yaml")
 NUM_CLIENTS_LIST=(1 5 10)
 RUN_NUMBERS=(0 1 2)
-METHODS_LIST=("LengthDetection")
+METHODS_LIST=("KnowEvents" "KnowEvents+LengthDetection")
 
 
 echo "Start runs"
@@ -18,4 +18,8 @@ for CONFIG_FILE in "${CONFIG_FILES[@]}"; do
         done
     done
 done
+
+echo "Gather all data"
+python script_gather_results.py
+
 echo "End all runs"
