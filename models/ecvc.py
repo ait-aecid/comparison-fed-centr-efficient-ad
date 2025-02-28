@@ -112,7 +112,7 @@ class ECVC(Model):
                 dist, _ = torch.min(manh / limit, dim=0)
                 min_dist.append(dist.detach().tolist())
 
-        return min_dist  # TODO:  add idf weights
+        return min_dist  
 
     def predict(self, X: List[List[Any]]) -> List[int]:
         return apply_threshold(self.score(X), threshold=self.threshold)
