@@ -1,7 +1,7 @@
 from dataloader import load_data
 
-import ml_tools
-from ml_models import deeplog
+import op.ml_tools as ml_tools
+from models.ml_models import deeplog
 import yaml
 
 config_path = 'config_files/hdfs_iid.yaml' # set the config data path

@@ -6,8 +6,8 @@ from flwr.common import Context
 from flwr.common import ndarrays_to_parameters, NDArrays, Scalar
 
 from dataloader import load_data
-import ml_tools
-from ml_models import deeplog
+import op.ml_tools as ml_tools
+from models.ml_models import deeplog
 
 def get_parameters(model):
     return [val.cpu().numpy() for _, val in model.state_dict().items()]

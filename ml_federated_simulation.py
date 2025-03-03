@@ -17,10 +17,10 @@ from flwr.server import ServerApp, ServerConfig, ServerAppComponents
 from flwr.server.strategy import FedAvg
 
 from dataloader import load_data
-import ml_tools
-from ml_models import deeplog
-from ml_flower_tools import DeepLogClient
-import ml_flower_tools
+import op.ml_tools as ml_tools
+from models.ml_models import deeplog
+from flower.ml_flower_tools import DeepLogClient
+import flower.ml_flower_tools as ml_flower_tools
 
 def client_fn(context: Context):
 

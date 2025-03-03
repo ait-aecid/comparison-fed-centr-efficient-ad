@@ -1,6 +1,6 @@
 import flwr as fl
 
-from flw_strategy import CustomStrategy
+from flower.flw_strategy import CustomStrategy
 from models import  model_init, _list
 from op.aux import Color
 
