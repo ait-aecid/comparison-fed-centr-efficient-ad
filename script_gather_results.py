@@ -9,5 +9,8 @@ print(results.head(6))
 print("Gather results")
 final = results.groupby(["Method", "N_Clients", "Dataset"]).mean()
 print(final)
-
 final.to_csv("final_results.csv")
+
+final = results.groupby(["Method", "N_Clients", "Dataset"]).std()
+print(final)
+final.to_csv("final_std_results.csv")
