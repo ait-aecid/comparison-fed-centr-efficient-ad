@@ -19,12 +19,13 @@ def set_parameters(model, parameters):
 
 
 class DeepLogClient(fl.client.NumPyClient):
-    def __init__(self, partition_id, model, train_data, val_data, config_params):
+    def __init__(self, partition_id, model, train_data, val_data, config_params, DEVICE):
         self.partition_id = partition_id
         self.model = model
         self.train_data = train_data
         self.val_data = val_data
         self.config_params = config_params
+        self.device = DEVICE
 
     def get_parameters(self, config):
         print(f"[Client {self.partition_id}] get_parameters")
@@ -38,16 +39,17 @@ class DeepLogClient(fl.client.NumPyClient):
                                  batch_size=self.config_params['Deeplog']['batch_size'], 
                                  local_epochs=self.config_params['Deeplog']['max_epoch'], 
                                  learnin_rate=self.config_params['Deeplog']['lr'], 
-                                 device='cpu')
-        return self.get_parameters(self.model), len(self.train_data), {"loss": train_loss}
+                                 device=self.device)
+        return self.get_parameters(self.model), len(self.train_data), {"loss": train_loss, "training_time": elapsed_time}
 
     def evaluate(self, parameters, config):
         set_parameters(self.model, parameters)
+        val_loss = ml_tools.validation_loss(self.model, self.val_data, self.device)
         FP, FP_rate, val_loss = ml_tools.validation_unsupervised(self.model, self.val_data,
                                 window_size=self.config_params['Deeplog']['window_size'], 
                                 input_size=self.config_params['Deeplog']['input_size'], 
                                 num_candidates=self.config_params['Deeplog']['num_candidates'], 
-                                device='cpu')
+                                device=self.device)
         return val_loss, len(self.val_data), {"FP_rate": FP_rate, "FP": FP}
 
 

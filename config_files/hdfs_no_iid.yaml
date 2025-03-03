@@ -9,18 +9,19 @@ Dataset:
     dataset_path: datasets/HDFS
     amount_clients: 2
     seed_number: 10
+    num_run: 0
     train_per: 0.01
     dist_method: LogNormal
     dist_plot_path: "distribution_plot.png"
 
 Deeplog:
     device: 'cpu'
-    validation_rate: 0.1
+    validation_rate: 0
     window_size: 10
     input_size: 1
     hidden_size: 64
     num_layers: 2
-    num_classes: 32
+    num_classes: 33
     batch_size: 2048
     accumulation_step: 1
     lr: 0.001
