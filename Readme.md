@@ -2,13 +2,16 @@
 
 This is the official code from ....
 
+Most of the code is subjetct to GNU license. Files **ml_tools.py** and **ml_models.py** are based from this [repository](https://github.com/d0ng1ee/logdeep?tab=MIT-1-ov-file)
+ and under MIT license (license added in each file).
+
 ## Datasets
 The datasets that were use are:
 
 *   **HDFS**: .....
 *   **BGL**: .....
 
-## Scripts
+## Scripts Simple methods
 Current scripts in the repository:
 *   **client_app.py**: start a client server.
 *   **server_app.py**: start the main server.
@@ -40,6 +43,11 @@ Change the arguments inside the script:
 ```
 sh run_multiple_clients.sh
 ```
+
+## Scripts ML methods
+Current scripts in the repository:
+*   **ml_centralize.py**: Run the ml methods as centralize.
+*   **ml_federated_simulation.py**: Run the ml methods as federated.
 
 ## Federated learning diagram
 The strategy was created following the [flower documentation](https://flower.ai/docs/framework/how-to-implement-strategies.html).
