@@ -53,11 +53,11 @@ class NgramTestCase(unittest.TestCase):
         )
 
     def test_get_weights(self) -> None:
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         self.assertListEqual([], gram2.get_weights())
 
     def test_set_weights(self) -> None:
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         values = ["(1, 2)", "(2, 2)"]
         gram2.set_weights(values)
 
@@ -68,7 +68,7 @@ class NgramTestCase(unittest.TestCase):
 
     def test_fit(self) -> None:
         X = [[1], [2, 2, 4], [2, 6]]
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         gram2.fit(X)
 
         self.assertSetEqual(
@@ -78,7 +78,7 @@ class NgramTestCase(unittest.TestCase):
 
     def test_score(self) -> None:
         X = [[1], [2, 2, 4], [2, 6]]
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         gram2.fit(X)
         score = gram2.score([[2, 4], [4, 3], [2, 4]])
 
@@ -86,7 +86,7 @@ class NgramTestCase(unittest.TestCase):
 
     def test_threshold(self) -> None:
         X = [[1], [2, 2, 4], [2, 6]]
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         gram2.fit(X)
         gram2.set_threshold(
             X_abnormal=[[4, 3], [5, 8]], X_normal=[[2, 4], [2, 6]]
@@ -96,7 +96,7 @@ class NgramTestCase(unittest.TestCase):
 
     def test_predict(self) -> None:
         X = [[1], [2, 2, 4], [2, 6]]
-        gram2 = ngram.NGram(2)
+        gram2 = ngram.NGram(2, thres=None)
         gram2.fit(X)
         gram2.set_threshold(
             X_abnormal=[[4, 3], [5, 8]], X_normal=[[2, 4], [2, 6]]
@@ -111,7 +111,7 @@ class NgramTestCase(unittest.TestCase):
 
         self.assertSetEqual(
             set(ngram.update_strategy(
-                ngram.NGram(2), clients_weights=c_weights
+                ngram.NGram(2, thres=None), clients_weights=c_weights
             )),
             {"(1, 2)", "(2, 2)", "(3, 4)"}
         )

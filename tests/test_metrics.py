@@ -88,3 +88,36 @@ class MetricsTestCase(unittest.TestCase):
             },
             result.as_dict()
         )
+
+    def test_as_csv(self) -> None:
+        result = apply_metrics(
+            pred_normal=[0, 0, 0], 
+            pred_abnormal=[1, 1, 1],
+        )
+        output = result.as_csv(None)
+        self.assertListEqual(
+            list(output.columns), 
+            ["tp", "tn", "fp", "fn", "precision", "balance accuracy", "recall", "f1"]
+        )
+        expected = {
+            'tp': [3], 'tn': [3], 'fp': [0], 'fn': [0], 'precision': [1.0], 
+            'balance accuracy': [1.0], 'recall': [1.0], 'f1': [1.0]
+        }
+        self.assertDictEqual(expected, output.to_dict("list"))
+        
+
+    def test_as_csv_with_prefix(self) -> None:
+        result = apply_metrics(
+            pred_normal=[0, 0, 0], 
+            pred_abnormal=[1, 1, 1],
+        )
+        output = result.as_csv(None, prefix={"a": [1], "b": [2]})
+        self.assertListEqual(
+            list(output.columns), 
+            ["a", "b", "tp", "tn", "fp", "fn", "precision", "balance accuracy", "recall", "f1"]
+        )
+        expected = {
+            'tp': [3], 'tn': [3], 'fp': [0], 'fn': [0], 'precision': [1.0], 
+            'balance accuracy': [1.0], 'recall': [1.0], 'f1': [1.0], "a": [1], "b": [2]
+        }
+        self.assertDictEqual(expected, output.to_dict("list"))

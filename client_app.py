@@ -20,9 +20,13 @@ class FlowerClient(fl.client.NumPyClient):
         num_run: int, 
         num_client: int,
         model: Model,
+        amount_clients: int,
     ) -> None:
         self.data = load_data(
-            config=config, num_client=num_client, num_run=num_run
+            config=config,
+            num_client=num_client,
+            num_run=num_run,
+            amount_clients=amount_clients
         )
         print(self.data)
         self.model = model
@@ -47,6 +51,7 @@ class FlowerClient(fl.client.NumPyClient):
 parser = argparse.ArgumentParser(description="Server script")
 parser.add_argument("--config", required=True, help="Configuration file")
 parser.add_argument("--num_client", required=True, type=int)
+parser.add_argument("--amount_clients", required=True, type=int)
 parser.add_argument(
     "--method", help=f"Select one of this {list(_list.keys())}", required=True, nargs="+"
 )
@@ -68,7 +73,8 @@ if __name__ == "__main__":
             config=config["Dataset"], 
             num_run=args.run_number, 
             num_client=num_client,
-            model=model_init(args.method)["Method"]
+            model=model_init(args.method)["Method"],
+            amount_clients=args.amount_clients,
         ).to_client()
     )
 

@@ -54,7 +54,11 @@ class DeepLogClient(fl.client.NumPyClient):
 def create_global_validation_data(config_params):
     global_validation_data = []
     for client in range(config_params["Dataset"]["amount_clients"]):
-        data = load_data(config=config_params["Dataset"], num_client=client)
+        data = load_data(
+            config=config_params["Dataset"],
+            num_client=client,
+            amount_clients=config_params["Dataset"]["amount_clients"],
+        )
         val_split = int(len(data.train)*(1-config_params["Deeplog"]['validation_rate']))
         global_validation_data.extend(data.train[val_split:])
 

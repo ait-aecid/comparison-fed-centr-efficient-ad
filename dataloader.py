@@ -17,10 +17,14 @@ class DataWrapper:
         train: t.List[t.List[int]],
         test_normal: t.List[t.List[int]],
         test_abnormal: t.List[t.List[int]],
+        args: data_ops.Arguments,
+        run_number: int = 0,
     ) -> None:
         self.train = train
         self.test_normal = test_normal
         self.test_abnormal = test_abnormal
+        self.args = args
+        self.run_number = run_number
 
     def __repr__(self) -> str:
         msg = Color.purple("Dataset size:")
@@ -34,7 +38,7 @@ class DataWrapper:
 
 
 def load_data(
-    config: t.Dict[str, t.Any], num_client: int, num_run: int = 0,
+    config: t.Dict[str, t.Any], num_client: int, amount_clients: int, num_run: int = 0
 ) -> DataWrapper:
     """
     Load data for each client.
@@ -50,6 +54,7 @@ def load_data(
     ```
     """
     print(Color.purple("Load data pipeline:"))
+    config["amount_clients"] = amount_clients
     args = data_ops.Arguments.from_config(config)
 
     print(Color.blue("1) Load datasets"), args.dataset_path)
@@ -69,5 +74,7 @@ def load_data(
     return DataWrapper(
         train=train["Event_seq"].to_list(),
         test_normal=split_data["test_normal"]["Event_seq"].to_list(),
-        test_abnormal=split_data["test_abnormal"]["Event_seq"].to_list()
+        test_abnormal=split_data["test_abnormal"]["Event_seq"].to_list(),
+        args=args,
+        run_number=num_run
     )

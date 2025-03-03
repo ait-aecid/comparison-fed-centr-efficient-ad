@@ -25,7 +25,11 @@ import flower.ml_flower_tools as ml_flower_tools
 def client_fn(context: Context):
 
     partition_id = context.node_config["partition-id"]
-    data = load_data(config=config_params["Dataset"], num_client=partition_id)
+    data = load_data(
+        config=config_params["Dataset"],
+        num_client=partition_id,
+        amount_clients=config_params["Dataset"]["amount_clients"],
+    )
     val_split = int(len(data.train)*(1-config_params["Deeplog"]['validation_rate']))
     train_data=data.train[:val_split]
     val_data=data.train[val_split:]
@@ -43,7 +47,11 @@ def evaluate(server_round: int, parameters: NDArrays, config: Dict[str, Scalar])
                            hidden_size=config_params['Deeplog']['hidden_size'], 
                            num_layers=config_params['Deeplog']['num_layers'], 
                            num_keys=config_params['Deeplog']['num_classes']).to(DEVICE)
-    data = load_data(config=config_params["Dataset"], num_client=0)
+    data = load_data(
+        config=config_params["Dataset"],
+        num_client=0,
+        amount_clients=config_params["Dataset"]["amount_clients"],
+    )
     ml_flower_tools.set_parameters(global_model, parameters)  # Update model with the latest parameters
     P, R, F1, FP, FN = ml_tools.predict_unsupervised(global_model, data,
                      window_size=config_params['Deeplog']['window_size'], 

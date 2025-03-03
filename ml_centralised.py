@@ -8,9 +8,8 @@ config_path = 'config_files/hdfs_iid.yaml' # set the config data path
 with open(config_path, "r") as f:
     config = yaml.safe_load(f)
 
-config["Dataset"]["amount_clients"] = 1
 
-data = load_data(config=config["Dataset"], num_client=0)
+data = load_data(config=config["Dataset"], num_client=0, amount_clients=1)
 val_split = int(len(data.train)*(1-config["Deeplog"]['validation_rate']))
 
 model = deeplog(input_size=config['Deeplog']['input_size'], 

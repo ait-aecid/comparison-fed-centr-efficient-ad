@@ -1,9 +1,15 @@
-
+"""
+This file has some hardcode parts that only work for the current setup format.
+The hardcode parts are marked with #HARDCODE
+"""
+import pandas as pd
+import numpy as np
 import typing as t
 
 from op._metrics import (
     Metrics, present_results, calculate_false_true_pred
 )
+from op.aux import save_csv_row
 
 
 class TimeResults:
@@ -15,6 +21,26 @@ class TimeResults:
 
     def as_dict(self) -> t.Dict[str, float]:
         return {"NaN": "(No stats found)"} if self.time is None else self.time
+    
+    def format_time(self) -> t.Dict[str, float]:
+        """Note, this only works for current setup format #HARDCODE"""
+        data = self.as_dict()
+        if 3 > len(data):
+            return {} 
+        return {
+            "time agregation": data["Round 1 update"],
+            "time threshold sel.": data["Round 1 threshold selection"],
+            "time inference": data["Round 1 evaluation"],
+            "time max local training": np.max(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
+            "time avg. local training": np.mean(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
+            "time std. local training": np.std(
+                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+            ),
+        }
 
 
 class Results:
@@ -60,6 +86,19 @@ class Results:
     
     def __str__(self) -> str:
         return self.__repr__()
+    
+    def as_csv(
+        self, path: str | None, prefix: dict = {}
+    ) -> None | pd.DataFrame: 
+        """If None return the DataFrame instead"""
+        time = self.time_stats.format_time()
+        table = pd.DataFrame(
+            prefix | {k : [v] for k, v in self.as_dict()["Metrics"].items()} | time
+        )
+        if path is None:
+            return table 
+        if len(table.columns) > 12 + len(prefix):  # Base only in current setup #HARDCODE
+            save_csv_row(path, data=table)
 
 
 def apply_metrics(

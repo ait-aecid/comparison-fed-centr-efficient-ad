@@ -25,7 +25,7 @@ class Combine(Model):
         models: List[Model],
         update_funcs: List[t.Callable[[Model, List[List[t.Any]]], None]] | None = None
     ) -> None:
-        super().__init__()
+        super().__init__(name=" ".join(m.name for m in models))
         self.models = models
         self.update_funcs = update_funcs 
 

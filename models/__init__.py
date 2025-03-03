@@ -1,3 +1,4 @@
+from models._thresholds import Thresholds
 
 import models.lenght_detection as ld
 import models.edit_distance as edit
@@ -32,7 +33,7 @@ _list = {
 }
 
 
-def model_init(names: List[str]) -> dict:
+def model_init(names: List[str], thres: Thresholds = Thresholds()) -> dict:
     """
     Return the model to be initialize and its updated_strategy
 
@@ -40,11 +41,13 @@ def model_init(names: List[str]) -> dict:
     """
     if len(names) == 1:
         name = names[0]
-        return {"Method": _list[name]["Method"](), "Update": _list[name]["Update"]}
+        return {
+            "Method": _list[name]["Method"](thres=thres), "Update": _list[name]["Update"]
+        }
     
     return {
         "Method": com.Combine(
-            models=[_list[name]["Method"]() for name in names], 
+            models=[_list[name]["Method"](thres=thres) for name in names], 
             update_funcs=[_list[name]["Update"] for name in names]
         ),
         "Update": com.update_strategy

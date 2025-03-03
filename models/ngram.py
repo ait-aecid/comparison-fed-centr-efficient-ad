@@ -12,7 +12,9 @@ Federated approach:
 -------------------
 Join the ngram tables of each client
 """
-from models._thresholds import supervised_threshold_selection, apply_threshold
+from models._thresholds import (
+    supervised_threshold_selection, apply_threshold, Thresholds
+)
 from models._imodel import Model
 
 from typing import Any, List, Tuple, Set, Iterator, Self
@@ -52,7 +54,9 @@ class GramSet:
 
 
 class NGram(Model):
-    def __init__(self, n: int) -> None:
+    def __init__(self, n: int, thres: float | None) -> None:
+        super().__init__(name=f"{n}-Gram", thres=thres)
+        self.get_thres = self.threshold is None 
         self.gramset = GramSet()
         self.n = n
 
@@ -85,23 +89,24 @@ class NGram(Model):
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
     ) -> None:
-        self.threshold = supervised_threshold_selection(
-            score_normal=self.score(X_normal), 
-            score_abnormal=self.score(X_abnormal),
-        )
+        if self.get_thres:
+            self.threshold = supervised_threshold_selection(
+                score_normal=self.score(X_normal),
+                score_abnormal=self.score(X_abnormal),
+            )
 
     def predict(self, X: List[List[Any]]) -> List[int]:
         return apply_threshold(self.score(X), threshold=self.threshold)
 
 
 class NGram2(NGram):
-    def __init__(self) -> None:
-        super().__init__(n=2)
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        super().__init__(n=2, thres=thres.gram2)
 
 
 class NGram3(NGram):
-    def __init__(self) -> None:
-        super().__init__(n=3)
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        super().__init__(n=3, thres=thres.gram3)
  
 
 def update_strategy(
@@ -109,7 +114,7 @@ def update_strategy(
 ) -> List[Any]:
 
     for client_weights in clients_weights:
-        ngram_ = NGram(server_model.n)
+        ngram_ = NGram(server_model.n, thres=0)
         ngram_.set_weights(client_weights)
         server_model.gramset + ngram_.gramset.storage
 

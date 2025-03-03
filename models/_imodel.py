@@ -7,6 +7,10 @@ import typing as t
 
 
 class Model(ABC):
+    def __init__(self, name: str = "Model", thres: float | None = None) -> None:
+        self.name = name
+        self.threshold = thres
+
     @abstractmethod
     def set_weights(self, weights: t.List[t.Any]) -> None: 
         """

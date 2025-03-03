@@ -11,7 +11,9 @@ Federated approach:
 for weigth in client_weights:
     server_weights.extend(weight)
 """
-from models._thresholds import supervised_threshold_selection, apply_threshold
+from models._thresholds import (
+    supervised_threshold_selection, apply_threshold, Thresholds
+)
 from models._imodel import Model
 
 from typing import Any, List, Tuple
@@ -62,7 +64,9 @@ def norm_tensor(x: torch.Tensor) -> torch.Tensor:
 
 
 class ECVC(Model):
-    def __init__(self) -> None:
+    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+        super().__init__(name="ECVC", thres=thres.ecvc)
+        self.get_thres = self.threshold is None 
         self.vectors = torch.Tensor([])
         self.n_elemts = 0
         self.is_trained = False
@@ -88,10 +92,11 @@ class ECVC(Model):
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
     ) -> None:
-        self.threshold = supervised_threshold_selection(
-            score_normal=self.score(X_normal),
-            score_abnormal=self.score(X_abnormal),
-        )
+        if self.get_thres:
+            self.threshold = supervised_threshold_selection(
+                score_normal=self.score(X_normal),
+                score_abnormal=self.score(X_abnormal),
+            )
     
     def score(self, X: List[List[Any]], batch_size: int = 200) -> List[float]:
         if not self.is_trained:
@@ -111,7 +116,7 @@ class ECVC(Model):
                 dist, _ = torch.min(manh / limit, dim=0)
                 min_dist.append(dist.detach().tolist())
 
-        return min_dist  # TODO:  add idf weights
+        return min_dist  
 
     def predict(self, X: List[List[Any]]) -> List[int]:
         return apply_threshold(self.score(X), threshold=self.threshold)
