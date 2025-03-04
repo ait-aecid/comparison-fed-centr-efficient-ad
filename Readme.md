@@ -49,6 +49,18 @@ Current scripts in the repository:
 *   **ml_centralize.py**: Run the ml methods as centralize.
 *   **ml_federated_simulation.py**: Run the ml methods as federated.
 
+## Docker support
+To run the code inside a docker container use the file **Dockerfile**. More info in [docker documentation](https://docs.docker.com/).
+
+Build the image with the next command:
+```bash
+docker build -t fed_comparison .
+```
+And run the container with:
+```bash
+docker run --name fed_comparison fed_comparison
+```
+
 ## Federated learning diagram
 The strategy was created following the [flower documentation](https://flower.ai/docs/framework/how-to-implement-strategies.html).
 
