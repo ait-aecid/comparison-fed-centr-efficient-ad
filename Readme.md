@@ -20,28 +20,32 @@ Current scripts in the repository:
 To run the code:
 - Running server:
 ```
-python server_app.py --config config_files/hdfs_iid.yaml --method 3-Gram --run_number 0
+python server_app.py --config config_files/hdfs_iid.yaml --method 3-Gram --run_number 0 --amount_clients 3
 ```
 - Running client:
 ```
-python client_app.py --config config_files/hdfs_iid.yaml --method 3-Gram --run_number 0 --num_client 0
+python client_app.py --config config_files/hdfs_iid.yaml --method 3-Gram --run_number 0 --num_client 0 --amount_clients 3
 ```
 
 ### Example Combine methods:
 To run the code:
 - Running server:
 ```
-python server_app.py --config config_files/bgl_no_iid.yaml --method KnowEvents LengthDetection --run_number 0
+python server_app.py --config config_files/bgl_no_iid.yaml --method KnowEvents LengthDetection --run_number 0 --amount_clients 3
 ```
 - Running client:
 ```
-python client_app.py --config config_files/bgl_no_iid.yaml --method KnowEvents LengthDetection --run_number 0 --num_client 0
+python client_app.py --config config_files/bgl_no_iid.yaml --method KnowEvents LengthDetection --run_number 0 --num_client 0 --amount_clients 3
 ```
 
 ### Run multiple methods at once
-Change the arguments inside the script:
+Change the arguments inside the script to run multiple clients at once:
 ```
 sh run_multiple_clients.sh
+```
+Or run the commnad bellow to run multiple runs at once:
+```
+sh run_multiple_runs.sh
 ```
 
 ## Scripts ML methods
