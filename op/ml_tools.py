@@ -87,11 +87,12 @@ def sliding_window(sequences, window_size):
 
     return result_logs, labels
 
-def train(model, train_data, window_size, batch_size, local_epochs, learnin_rate, device='cpu'):
+def train(model, train_data, window_size, batch_size, local_epochs, learnin_rate, device):
 
     train_data, train_labels = sliding_window(sequences=train_data, window_size=window_size)
     dataset = CustomDataset(train_data, train_labels)
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    model.to(device)
 
     accumulation_step = 1
     start_time = time.time()
@@ -104,7 +105,7 @@ def train(model, train_data, window_size, batch_size, local_epochs, learnin_rate
         tbar = tqdm(data_loader, desc="\r")
         total_losses = 0
         for i, (log, label) in enumerate(tbar):
-            features = [log]
+            features = [log.to(device)]
             output = model(features=features, device=device)
             loss = criterion(output, label.to(device))
             total_losses += float(loss)
@@ -118,7 +119,7 @@ def train(model, train_data, window_size, batch_size, local_epochs, learnin_rate
     elapsed_time = time.time() - start_time
     print('elapsed_time: {}'.format(elapsed_time))
     
-    return total_losses / len(data_loader), elapsed_time
+    return total_losses / len(data_loader), float(elapsed_time)
 
 def generate(sequences, window_size):
     seq = {}
@@ -139,7 +140,7 @@ def generate(sequences, window_size):
     print(f'Number of unique sequences: {len(seq)}')
     return seq, length
 
-def predict_unsupervised(model, data, window_size, input_size, num_candidates, device='cpu'):
+def predict_unsupervised(model, data, window_size, input_size, num_candidates, device):
     model = model.to(device)
     model.eval()
     test_normal_loader, test_normal_length = generate(data.test_normal, window_size)
@@ -182,6 +183,7 @@ def predict_unsupervised(model, data, window_size, input_size, num_candidates, d
     P = 100 * TP / (TP + FP)
     R = 100 * TP / (TP + FN)
     F1 = 2 * P * R / (P + R)
+    TN = test_normal_length - FP
     print(
         'false positive (FP): {}, false negative (FN): {}, Precision: {:.3f}%, Recall: {:.3f}%, F1-measure: {:.3f}%'
         .format(FP, FN, P, R, F1))
@@ -189,14 +191,15 @@ def predict_unsupervised(model, data, window_size, input_size, num_candidates, d
     elapsed_time = time.time() - start_time
     print('elapsed_time: {}'.format(elapsed_time))
 
-    return P, R, F1, FP, FN
+    return P, R, F1, FP, FN, TP, TN, elapsed_time
     
-def validation_loss(model, validation_data, device='cpu'):
+def validation_loss(model, validation_data, device):
 
     val_data, val_labels = sliding_window(sequences=validation_data, window_size=10)
     val_dataset = CustomDataset(val_data, val_labels)
     val_loader = DataLoader(val_dataset, shuffle=True)
-
+    
+    model.to(device)
     model.eval()
     total_losses = 0
     criterion = nn.CrossEntropyLoss()
@@ -204,7 +207,7 @@ def validation_loss(model, validation_data, device='cpu'):
     num_batch = len(val_loader)
     for i, (log, label) in enumerate(tbar):
         with torch.no_grad():
-            output = model(features=[log], device=device)
+            output = model(features=[log.to(device)], device=device)
             loss = criterion(output, label.to(device))
             total_losses += float(loss)
     val_loss = total_losses / num_batch
