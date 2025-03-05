@@ -31,6 +31,7 @@ class FlowerClient(fl.client.NumPyClient):
         print(self.data)
         self.model = model
         self.n = len(self.data.test_abnormal) + len(self.data.test_normal)
+        self.num_client = num_client
 
     def fit(self, parameters, config) -> None:
 
@@ -43,7 +44,7 @@ class FlowerClient(fl.client.NumPyClient):
         end = time.time() - start
         print(Color.blue("Local Training Complete"))
         
-        metrics = {"Loss": results, f"Time client {num_client}": end}
+        metrics = {"Loss": results, f"Time client {self.num_client}": end}
         return weights, len(self.data.train), metrics 
 
 

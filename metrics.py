@@ -27,18 +27,19 @@ class TimeResults:
         data = self.as_dict()
         if 3 > len(data):
             return {} 
+        print(data.keys())
         return {
             "time agregation": data["Round 1 update"],
             "time threshold sel.": data["Round 1 threshold selection"],
             "time inference": data["Round 1 evaluation"],
             "time max local training": np.max(
-                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+                [data[d] for d in data.keys() if d.startswith("Round 1")]
             ),
             "time avg. local training": np.mean(
-                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+                [data[d] for d in data.keys() if d.startswith("Round 1")]
             ),
             "time std. local training": np.std(
-                [data[d] for d in data.keys() if d.startswith("Round 1 Time")]
+                [data[d] for d in data.keys() if d.startswith("Round 1")]
             ),
         }
 
