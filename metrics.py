@@ -27,7 +27,6 @@ class TimeResults:
         data = self.as_dict()
         if 3 > len(data):
             return {} 
-        print(data.keys())
         return {
             "time agregation": data["Round 1 update"],
             "time threshold sel.": data["Round 1 threshold selection"],

@@ -4,6 +4,7 @@ from models import model_init, _list
 from client_app import FlowerClient
 from server_app import _select_thres
 
+from flwr.server.superlink.fleet.vce.backend.backend import BackendConfig
 from flwr.server import ServerApp, ServerAppComponents, ServerConfig
 from flwr.simulation import run_simulation
 from flwr.client import ClientApp
@@ -76,7 +77,7 @@ if __name__ == "__main__":
 
     # Specify the resources each of your clients need
     # If set to none, by default, each client will be allocated 2x CPU and 0x GPUs
-    backend_config = {"client_resources": None}
+    backend_config = {"client_resources": {"num_cpus": 0.25}}
     if DEVICE.type == "cuda":
         backend_config = {"client_resources": {"num_cpus": 1, "num_gpus": 1.0}}
 
@@ -85,5 +86,5 @@ if __name__ == "__main__":
         server_app=server,
         client_app=client,
         num_supernodes=num_clients,
-        backend_config=backend_config,
+        backend_config=BackendConfig(backend_config),
     )
