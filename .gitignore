@@ -3,3 +3,14 @@ __pycache__/
 .venv/
 .vscode/
 distribution_plot.png
+
+.DS_Store
+None.png
+datasets/.DS_Store
+datasets/HDFS/.ipynb_checkpoints/
+flower_deeplog.yml
+ml_ad_results.ipynb
+ml_ad_test.ipynb
+ml_ad_wnb.ipynb
+ml_env/
+wandb/
