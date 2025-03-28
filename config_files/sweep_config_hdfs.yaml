@@ -1,0 +1,15 @@
+method: grid
+metric:
+  name: F1
+  goal: maximize
+parameters:
+  number_of_clients:
+    values: [1]
+  max_epoch:
+    values: [1]
+  num_run:
+    values: [0,1,2]
+  model:
+    values: ["deeplog"]
+  distribution:
+    values: ["IID"]
