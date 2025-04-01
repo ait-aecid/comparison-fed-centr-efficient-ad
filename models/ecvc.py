@@ -80,7 +80,8 @@ class ECVC(Model):
         return self.vectors.detach().tolist()
     
     def set_weights(self, weights: List[Any]) -> None:
-        self.vectors = torch.unique(torch.Tensor(weights), dim=0, sorted=False)
+        if weights is not None:
+            self.vectors = torch.unique(torch.Tensor(weights), dim=0, sorted=False)
 
     def fit(self, X: List[List[Any]]) -> float:
         vectors, self.n_elemts = self.__get_vectors(X)
