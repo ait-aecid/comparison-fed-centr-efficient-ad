@@ -11,6 +11,7 @@ import typing as t
 import argparse
 import time
 import yaml
+import gc
 
 
 class FlowerClient(fl.client.NumPyClient):
@@ -30,7 +31,10 @@ class FlowerClient(fl.client.NumPyClient):
         )
         print(self.data)
         self.model = model
-        self.n = len(self.data.test_abnormal) + len(self.data.test_normal)
+        del self.data.test_abnormal
+        del self.data.test_normal
+        gc.collect()
+
         self.num_client = num_client
 
     def fit(self, parameters, config) -> None:
