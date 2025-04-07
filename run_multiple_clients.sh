@@ -4,7 +4,7 @@
 DEFAULT_RUN_NUMBER=2
 DEFAULT_CONFIG_PATH="config_files/hdfs_iid.yaml"
 DEFAULT_NUM_CLIENTS=1
-DEFAULT_METHODS="2-Gram LengthDetection"
+DEFAULT_METHODS="KnowEvents"
 
 
 # Getting final arguments
