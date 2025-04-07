@@ -34,6 +34,12 @@ class EditDistance(Model):
         self.get_thres = self.threshold is None
         self.sequences = set()
 
+    def __len__(self) -> int:
+        n = 0
+        for seq in self.sequences:
+            n += len(seq)
+        return n
+
     def __add__(self, value: List[Any]) -> None:
         self.sequences.add(tuple(value))
 
@@ -74,7 +80,7 @@ class EditDistance(Model):
     def fit(self, X: List[List[Any]]) -> float:
         for xi in X:
             self + xi
-        return 0.
+        return len(self)
     
     def predict(self, X: List[List[Any]]) -> List[int]:
         return apply_threshold(score=self.score(X), threshold=self.threshold)

@@ -35,6 +35,9 @@ class GramSet:
     def __init__(self) -> None:
         self.storage = set()
 
+    def __len__(self) -> int:
+        return len(self.storage)
+
     def __contains__(self, idx: Any) -> bool:
         return idx in self.storage
 
@@ -70,7 +73,7 @@ class NGram(Model):
         for x in tqdm(X):
             for seq in split_seq(x, sep=self.n):
                 self.gramset + seq
-        return 0
+        return len(self.gramset)
 
     def score(self, X: List[List[Any]]) -> List[int]:
         results, mn_max = [], 10e-10

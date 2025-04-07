@@ -47,6 +47,7 @@ class FlowerClient(fl.client.NumPyClient):
         weights = NDArrays([self.model.get_weights()])
         end = time.time() - start
         print(Color.blue(f"Local Training Complete {self.num_client}"))
+        print(Color.blue(f"Loss from node {self.num_client}: {results}"))
         
         metrics = {"Loss": results, f"Time client {self.num_client}": end}
         return weights, len(self.data.train), metrics 

@@ -88,7 +88,7 @@ class ECVC(Model):
         self.set_weights(vectors)
         self.is_trained = True
 
-        return len(self.vectors)
+        return len(self.vectors) * self.n_elemts
 
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]
