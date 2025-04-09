@@ -83,7 +83,7 @@ class NGram(Model):
                 if seq not in self.gramset:
                     results[-1] += 1
             
-            nmax = 1 if len(seq) >= self.n else  self.n * (len(seq) - self.n / 2)
+            nmax = 1 if self.n >= len(seq) else  self.n * (len(seq) - self.n / 2)
             results[-1] /= nmax
             mn_max = max(mn_max, results[-1])
 
