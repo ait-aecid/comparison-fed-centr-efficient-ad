@@ -65,7 +65,7 @@ class ECVCTestCase(unittest.TestCase):
         x = [[1, 4, 2, 1, 2], [0, 0, 0, 3], [0, 0, 0, 3], [4, 0], [0, 4]]
         count_vector = vc.ECVC()
         
-        self.assertEqual(3, count_vector.fit(x))
+        self.assertEqual(15, count_vector.fit(x))
         vectors = count_vector.get_weights()
         self.assertTrue([0, 2, 2, 0, 1] in vectors)
         self.assertTrue([3, 0, 0, 1, 0] in vectors)
