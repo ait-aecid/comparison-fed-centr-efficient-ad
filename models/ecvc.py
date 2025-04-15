@@ -100,7 +100,7 @@ class ECVC(Model):
             )
     
     def score(self, X: List[List[Any]], batch_size: int = 200) -> List[float]:
-        if not self.is_trained:
+        if not self.is_trained or self.vectors.shape[0] == 0:
             return torch.zeros(len(X)).detach().tolist()
         
         min_dist = []
