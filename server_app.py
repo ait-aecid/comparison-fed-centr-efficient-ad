@@ -48,7 +48,7 @@ if __name__ == "__main__":
     fl.server.start_server(
         server_address=ip,
         config=fl.server.ServerConfig(
-            num_rounds=config["General"]["number_rounds"],
+            num_rounds=1, #config["General"]["number_rounds"],
         ),
         strategy=CustomStrategy(
             config=config["Dataset"],
