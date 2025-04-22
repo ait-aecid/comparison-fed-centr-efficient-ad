@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default arguments
-DEFAULT_RUN_NUMBER=2
+DEFAULT_RUN_NUMBER=0
 DEFAULT_CONFIG_PATH="config_files/hdfs_iid.yaml"
 DEFAULT_NUM_CLIENTS=1
 DEFAULT_METHODS="KnowEvents"

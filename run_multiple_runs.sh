@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Arguments of the different runs
-CONFIG_FILES=("config_files/bgl_no_iid.yaml")
-NUM_CLIENTS_LIST=(1 2 10)
+CONFIG_FILES=("config_files/hdfs_iid.yaml")
+NUM_CLIENTS_LIST=(1 5 10)
 RUN_NUMBERS=(0 1 2)
 METHODS_LIST=("KnowEvents" "LengthDetection" "ECVC" "2-Gram" "3-Gram" "Edit" "KnowEvents+LengthDetection" "KnowEvents+LengthDetection+ECVC" "KnowEvents+LengthDetection+Edit" "2-Gram+LengthDetection")
-
 
 echo "Start runs"
 for CONFIG_FILE in "${CONFIG_FILES[@]}"; do
