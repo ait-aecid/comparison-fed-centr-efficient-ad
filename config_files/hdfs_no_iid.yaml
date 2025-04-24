@@ -15,7 +15,7 @@ Dataset:
 
 Deeplog:
     device: 'cpu'
-    validation_rate: 0
+    validation_rate: 0.1
     window_size: 10
     input_size: 1
     hidden_size: 64

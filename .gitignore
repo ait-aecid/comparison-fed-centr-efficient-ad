@@ -4,3 +4,6 @@ __pycache__/
 .vscode/
 distribution_plot.png
 *csv
+.DS_Store
+flower/.DS_Store
+op/.DS_Store

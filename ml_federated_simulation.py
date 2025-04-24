@@ -18,18 +18,14 @@ from flwr.server.strategy import FedAvg
 
 from dataloader import load_data
 import op.ml_tools as ml_tools
-from models.ml_models import deeplog
+from models.ml_models import deeplog, loganomaly
 from flower.ml_flower_tools import DeepLogClient
 import flower.ml_flower_tools as ml_flower_tools
 
 def client_fn(context: Context):
         
     partition_id = context.node_config["partition-id"]
-    data = load_data(
-        config=config_params["Dataset"],
-        num_client=partition_id,
-        amount_clients=config_params["Dataset"]["amount_clients"],
-    )
+    data = load_data(config=config_params["Dataset"], num_client=partition_id, amount_clients=config_params["Dataset"]["amount_clients"])
     if config_params["Deeplog"]['validation_rate'] != 0:
         val_split = int(len(data.train)*(1-config_params["Deeplog"]['validation_rate']))
         train_data=data.train[:val_split]
@@ -38,16 +34,15 @@ def client_fn(context: Context):
         train_data = data.train
         val_data = data.train
 
-    model = deeplog(input_size=config_params['Deeplog']['input_size'], 
+    model = config_params['model'](input_size=config_params['Deeplog']['input_size'], 
                         hidden_size=config_params['Deeplog']['hidden_size'], 
                         num_layers=config_params['Deeplog']['num_layers'], 
                         num_keys=config_params['Deeplog']['num_classes'])
-    
 
     return DeepLogClient(partition_id, model, train_data, val_data, config_params, DEVICE).to_client()
 
 def evaluate(server_round: int, parameters: NDArrays, config: Dict[str, Scalar]) -> Optional[Tuple[float, Dict[str, Scalar]]]:
-    global_model = deeplog(input_size=config_params['Deeplog']['input_size'], 
+    global_model = config_params['model'](input_size=config_params['Deeplog']['input_size'], 
                         hidden_size=config_params['Deeplog']['hidden_size'], 
                         num_layers=config_params['Deeplog']['num_layers'], 
                         num_keys=config_params['Deeplog']['num_classes']).to(DEVICE)
@@ -58,11 +53,12 @@ def evaluate(server_round: int, parameters: NDArrays, config: Dict[str, Scalar])
     )
     ml_flower_tools.set_parameters(global_model, parameters)  # Update model with the latest parameters
     P, R, F1, FP, FN, TP, TN, prediction_time = ml_tools.predict_unsupervised(global_model, data,
-                    window_size=config_params['Deeplog']['window_size'], 
-                    input_size=config_params['Deeplog']['input_size'], 
-                    num_candidates=config_params['Deeplog']['num_candidates'], 
-                    device=DEVICE)
-    print(f"Server-side evaluation F1-score {F1} / FP {FP} / FN {FN} / Precision {P} / Recall {R}")
+                        window_size=config_params['Deeplog']['window_size'], 
+                        input_size=config_params['Deeplog']['input_size'], 
+                        num_candidates=config_params['Deeplog']['num_candidates'],
+                        num_classes=config_params['Deeplog']['num_classes'], 
+                        device=DEVICE)
+    print(f"Server-side evaluation F1-score {F1} / FP {FP} / FN {FN} / Precision {P} / Recall {R} / Prediction_time {prediction_time}")
     return 0, {"F1": F1}
     
 def fit_metrics_aggregation_fn(metrics_list):
@@ -95,6 +91,7 @@ def server_fn(context: Context) -> ServerAppComponents:
 parser = argparse.ArgumentParser(description="Server script")
 parser.add_argument("--config", required=True, type=str, help="Path to configuration file")
 parser.add_argument("--num_clients", required=True, type=int)
+parser.add_argument("--model", required=True, type=str, help="deeplog or loganomaly")
 parser.add_argument("--device", required=True, type=str, help="cpu or the number for GPU device [0,1,2..]")
 
 args = parser.parse_args()
@@ -114,8 +111,13 @@ if __name__ == "__main__":
     num_clients = config_params['Dataset']['amount_clients']
     num_rounds = config_params['General']['number_rounds']
     
+    if args.model == 'deeplog':
+        config_params['model'] = deeplog
+    elif args.model == 'loganomaly':
+       config_params['model'] = loganomaly
+
     #Initialise first global model
-    net=deeplog(input_size=config_params['Deeplog']['input_size'], 
+    net=config_params['model'](input_size=config_params['Deeplog']['input_size'], 
                             hidden_size=config_params['Deeplog']['hidden_size'], 
                             num_layers=config_params['Deeplog']['num_layers'], 
                             num_keys=config_params['Deeplog']['num_classes'])
