@@ -5,6 +5,19 @@ This is the official code from ....
 Most of the code is subjetct to GNU license. Files **ml_tools.py** and **ml_models.py** are based from this [repository](https://github.com/d0ng1ee/logdeep?tab=MIT-1-ov-file)
  and under MIT license (license added in each file).
 
+### Install dependencies
+
+To install dependencies do:
+
+```
+pip install -r requirements.txt 
+```
+and 
+```
+pip install -U "flwr[simulation]"
+```
+we run this repository with **Python 3.12.3**.
+
 ## Datasets
 The datasets that were use are: HDFS, BGL.
 
