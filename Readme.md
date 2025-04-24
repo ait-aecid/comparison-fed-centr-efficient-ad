@@ -79,7 +79,7 @@ python ml_centralize.py
 ```
 *   **ml_federated_simulation.py**: Run the ml methods as federated.
 ```
-python ml_federated_simulation.py  --config config_files/hdfs_iid.yaml --num_clients 2 --device cpu
+python ml_federated_simulation.py  --config config_files/hdfs_iid.yaml --num_clients 2 --model deepplog --device cpu
 ```
 ## Docker support
 To run the code inside a docker container use the file **Dockerfile**. More info in [docker documentation](https://docs.docker.com/).
