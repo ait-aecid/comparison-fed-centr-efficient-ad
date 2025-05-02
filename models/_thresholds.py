@@ -55,11 +55,11 @@ class ThresHDFS(Thresholds):
     ecvc: float | None = 0.00228
     gram2: float | None = 0.0224
     gram3: float | None = 0.0147
-    edit: float | None = 1.0030
+    edit: float | None = 0.18498
 
 
 class ThresBGL(Thresholds):
     ecvc: float | None = 0.0018
     gram2: float | None = 0.0
     gram3: float | None = 0.0
-    edit: float | None = 1.0030
+    edit: float | None = 0.17084

@@ -61,25 +61,31 @@ class EditDistance(Model):
     def score(self, X: List[List[Any]]) -> List[int]:
         if len(self.sequences) == 0:
             return [-1 for _ in X]
+
         scores, cache = [], {}
-        min_dist = 2
         for xi in tqdm(X):
-            if (xi_ := tuple(xi)) in cache.keys():
+            xi_ = tuple(xi)
+            if xi_ in cache.keys():
                 scores.append(cache[xi_])
             else:
-                scores.append(min([
-                    levenshtein_distance(xi_, seq, score_cutoff=math.floor(
-                        (n := max(len(xi), len(seq))) * min_dist
-                    ) / n) 
-                    for seq in self.sequences
-                ]))
-                min_dist = min_dist if min_dist <= scores[-1] else scores[-1]
+                min_dist = 2
+                for seq in self.sequences:
+                    norm = float(max(len(seq), len(xi_)))
+                    dist = levenshtein_distance(seq, xi_, score_cutoff=math.floor(norm * min_dist)) / norm
+                    if dist < min_dist:
+                        min_dist = dist
+                    #print(f"norm: {norm}", math.floor(norm * min_dist), dist, min_dist)
+
+                scores.append(min_dist)
                 cache[xi_] = scores[-1]
+                #exit()
         return scores
 
     def fit(self, X: List[List[Any]]) -> float:
+        self.sequences = set()
         for xi in X:
             self + xi
+        print(len(self.sequences), len(X))
         return len(self)
     
     def predict(self, X: List[List[Any]]) -> List[int]:

@@ -48,7 +48,7 @@ class CombineTestCase(unittest.TestCase):
         )
         result = combine.predict([[1, 2, 3], [3, 2], [0, 5, 8, 9, 11]])
 
-        self.assertAlmostEqual(edit_distance.threshold, 1, delta=0.01)        
+        self.assertAlmostEqual(edit_distance.threshold, 0.6676676869392395, delta=0.01)        
         self.assertListEqual([0, 0, 1], result)
 
     def test_get_weights(self) -> None:
