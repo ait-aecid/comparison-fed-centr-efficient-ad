@@ -64,6 +64,9 @@ def norm_tensor(x: torch.Tensor) -> torch.Tensor:
 
 
 class ECVC(Model):
+    """
+    It calculates the distance between distances of the sequences.
+    """
     def __init__(self, thres: Thresholds = Thresholds()) -> None:
         super().__init__(name="ECVC", thres=thres.ecvc)
         self.get_thres = self.threshold is None 

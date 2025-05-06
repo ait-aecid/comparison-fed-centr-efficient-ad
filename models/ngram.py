@@ -57,10 +57,14 @@ class GramSet:
 
 
 class NGram(Model):
-    def __init__(self, n: int, thres: float | None) -> None:
+    """
+    N-Gram model for anomaly detection. It use a set of n-grams of events ids.
+    """
+    def __init__(self, n: int, thres: float | None, div_max: bool = True) -> None:
         super().__init__(name=f"{n}-Gram", thres=thres)
         self.get_thres = self.threshold is None 
         self.gramset = GramSet()
+        self.div_max = div_max
         self.n = n
 
     def get_weights(self) -> List[Any]:
@@ -87,7 +91,7 @@ class NGram(Model):
             results[-1] /= nmax
             mn_max = max(mn_max, results[-1])
 
-        return (torch.Tensor(results) / mn_max).detach().tolist()
+        return (torch.Tensor(results) / mn_max).detach().tolist() if self.div_max else results
 
     def set_threshold(
         self, X_normal: List[List[Any]], X_abnormal: List[List[Any]]

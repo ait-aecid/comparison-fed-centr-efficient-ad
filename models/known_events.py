@@ -19,6 +19,9 @@ import typing as t
 
 
 class KnownEvents(Model):
+    """
+    Known events method, it looks for new events in the sequence.
+    """
     def __init__(self, thres: Thresholds = Thresholds()) -> None:
         super().__init__(name="KnownEvents", thres=thres.events)
         self.events = set()

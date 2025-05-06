@@ -20,6 +20,9 @@ import typing as t
 
 
 class Combine(Model):
+    """
+    Combine methods, it use the union of the results of each method.
+    """
     def __init__(
         self, 
         models: List[Model],

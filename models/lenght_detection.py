@@ -49,6 +49,9 @@ class _RangeClass:
 
 
 class LengthDetection(Model, _RangeClass):
+    """
+    Length Detection method, it use the length of the sequence.
+    """
     def __init__(self, thres: Thresholds = Thresholds()) -> None:
         Model.__init__(self, name="LengthDetection", thres=thres.length)
         _RangeClass.__init__(self)
