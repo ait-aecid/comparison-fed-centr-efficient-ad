@@ -53,8 +53,8 @@ class Thresholds:
 
 class ThresHDFS(Thresholds):
     ecvc: float | None = 0.00228
-    gram2: float | None = 0.0224
-    gram3: float | None = 0.0147
+    gram2: float | None = 0.0617 #0.0224
+    gram3: float | None = 0.0981 #0.0147
     edit: float | None = 0.18498
 
 

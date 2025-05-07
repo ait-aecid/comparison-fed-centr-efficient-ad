@@ -60,7 +60,7 @@ class NGram(Model):
     """
     N-Gram model for anomaly detection. It use a set of n-grams of events ids.
     """
-    def __init__(self, n: int, thres: float | None, div_max: bool = True) -> None:
+    def __init__(self, n: int, thres: float | None, div_max: bool = False) -> None:
         super().__init__(name=f"{n}-Gram", thres=thres)
         self.get_thres = self.threshold is None 
         self.gramset = GramSet()

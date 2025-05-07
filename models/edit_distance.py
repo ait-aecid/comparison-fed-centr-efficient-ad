@@ -32,10 +32,13 @@ class EditDistance(Model):
     """
     It use the Levenshtein distance to compare the sequences.
     """
-    def __init__(self, thres: Thresholds = Thresholds()) -> None:
+    def __init__(
+        self, thres: Thresholds = Thresholds(), do_cutoff: bool = False
+    ) -> None:
         super().__init__(name="EditDistance", thres=thres.edit)
         self.get_thres = self.threshold is None
         self.sequences = set()
+        self.do_cutoff = do_cutoff
 
     def __len__(self) -> int:
         n = 0
@@ -74,7 +77,8 @@ class EditDistance(Model):
                 min_dist = 2
                 for seq in self.sequences:
                     norm = float(max(len(seq), len(xi_)))
-                    dist = levenshtein_distance(seq, xi_, score_cutoff=math.floor(norm * min_dist)) / norm
+                    cutoff = math.floor(norm * min_dist) if self.do_cutoff else None
+                    dist = levenshtein_distance(seq, xi_, score_cutoff=cutoff) / norm
                     if dist < min_dist:
                         min_dist = dist
 
