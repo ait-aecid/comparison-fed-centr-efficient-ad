@@ -78,7 +78,7 @@ class NgramTestCase(unittest.TestCase):
 
     def test_score(self) -> None:
         X = [[1], [2, 2, 4], [2, 6]]
-        gram2 = ngram.NGram(2, thres=None)
+        gram2 = ngram.NGram(2, thres=None, div_max=True)
         gram2.fit(X)
         score = gram2.score([[2, 4], [4, 3], [2, 4]])
 
